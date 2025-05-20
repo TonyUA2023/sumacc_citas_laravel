@@ -1,0 +1,11 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Para permitir transición del margen lateral en el contenido principal */
+.sidebar-expanded {
+  margin-left: 16rem; /* 64 */
+}
+.sidebar-collapsed {
+  margin-left: 5rem; /* 20 */
+}
