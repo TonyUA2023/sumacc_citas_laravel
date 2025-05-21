@@ -7,7 +7,6 @@ use App\Models\Customer;
 use App\Models\ServiceVehiclePrice;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
-use Illuminate\Support\Facades\DB;
 
 class AppointmentController extends Controller
 {
@@ -16,35 +15,48 @@ class AppointmentController extends Controller
         $this->middleware('auth:admin')->except(['storeBooking']);
     }
 
-    // Mostrar listado
+    /**
+     * Mostrar la vista principal del calendario
+        */
+        
     public function index()
     {
-        // Cargar citas con relaciones necesarias
+        $customers = Customer::all();
+
+        $serviceVehiclePrices = ServiceVehiclePrice::with('service', 'vehicleType')->get();
+
+        $appointments = Appointment::with('customer', 'serviceVehiclePrice.service', 'serviceVehiclePrice.vehicleType')
+            ->paginate(10);
+
+        return view('admin.appointments.index', compact('customers', 'serviceVehiclePrices', 'appointments'));
+    }
+
+    public function events()
+    {
         $appointments = Appointment::with(['customer', 'serviceVehiclePrice.service', 'serviceVehiclePrice.vehicleType'])->get();
 
-        // Preparar los datos para el calendario en JS (JSON seguro)
-        $appointmentsData = $appointments->map(function($a) {
+        $events = $appointments->map(function ($appointment) {
             return [
-                'id' => $a->id,
-                'title' => $a->customer->name ?? 'Sin cliente',
-                'start' => Carbon::parse($a->appointment_date)->format('Y-m-d\TH:i:s'),
-                'end' => Carbon::parse($a->appointment_date)->addHours(2)->format('Y-m-d\TH:i:s'),
-                'classNames' => [$a->status],
+                'id' => $appointment->id,
+                'title' => optional($appointment->serviceVehiclePrice->service)->name ?? 'N/A',
+                'start' => optional($appointment->appointment_date)?->format('Y-m-d\TH:i:s') ?? now()->format('Y-m-d\TH:i:s'),
+                'end' => optional($appointment->appointment_date)?->addHour()->format('Y-m-d\TH:i:s') ?? now()->addHour()->format('Y-m-d\TH:i:s'),
                 'extendedProps' => [
-                    'status' => $a->status,
-                    'service' => $a->serviceVehiclePrice->service->name ?? '',
-                    'vehicle' => $a->serviceVehiclePrice->vehicleType->name ?? '',
-                ]
+                    'customer_name' => optional($appointment->customer)->name ?? 'N/A',
+                    'vehicle' => optional($appointment->serviceVehiclePrice->vehicleType)->name ?? 'N/A',
+                    'total_price' => (float) ($appointment->total_price ?? 0),
+                    'status' => $appointment->status ?? 'pendiente',
+                ],
             ];
         });
 
-        // También carga clientes para el select del modal
-        $customers = \App\Models\Customer::all();
-
-        return view('admin.appointments.index', compact('appointmentsData', 'customers'));
+        return response()->json($events);
     }
 
-    // Form para crear cita
+
+    /**
+     * Mostrar formulario para crear una cita
+     */
     public function create()
     {
         $customers = Customer::all();
@@ -52,7 +64,9 @@ class AppointmentController extends Controller
         return view('admin.appointments.create', compact('customers', 'serviceVehiclePrices'));
     }
 
-    // Guardar cita
+    /**
+     * Guardar nueva cita
+     */
     public function store(Request $request)
     {
         $request->validate([
@@ -69,15 +83,19 @@ class AppointmentController extends Controller
         return redirect()->route('appointments.index')->with('success', 'Cita creada exitosamente.');
     }
 
-    // Mostrar detalle
+    /**
+     * Mostrar detalle de cita
+     */
     public function show($id)
     {
         $appointment = Appointment::with(['customer', 'adminUser', 'serviceVehiclePrice.vehicleType', 'appointmentExtras.aLaCarteService'])
-                        ->findOrFail($id);
+            ->findOrFail($id);
         return view('admin.appointments.show', compact('appointment'));
     }
 
-    // Form para editar cita
+    /**
+     * Mostrar formulario para editar cita
+     */
     public function edit($id)
     {
         $appointment = Appointment::findOrFail($id);
@@ -86,7 +104,22 @@ class AppointmentController extends Controller
         return view('admin.appointments.edit', compact('appointment', 'customers', 'serviceVehiclePrices'));
     }
 
-    // Actualizar cita
+    public function updateStatus(Request $request, Appointment $appointment)
+    {
+        $request->validate([
+            'status' => 'required|in:pendiente,aceptado,realizado,rechazado',
+        ]);
+
+        $appointment->status = $request->status;
+        $appointment->save();
+
+        return response()->json(['message' => 'Estado actualizado']);
+    }
+
+
+    /**
+     * Actualizar cita existente
+     */
     public function update(Request $request, $id)
     {
         $request->validate([
@@ -104,7 +137,9 @@ class AppointmentController extends Controller
         return redirect()->route('appointments.index')->with('success', 'Cita actualizada exitosamente.');
     }
 
-    // Eliminar cita
+    /**
+     * Eliminar cita
+     */
     public function destroy($id)
     {
         $appointment = Appointment::findOrFail($id);
@@ -112,29 +147,4 @@ class AppointmentController extends Controller
 
         return redirect()->route('appointments.index')->with('success', 'Cita eliminada exitosamente.');
     }
-
-    public function calendar()
-    {
-        return view('admin.appointments.index');
-    }
-
-    public function events()
-    {
-        $appointments = Appointment::with('customer', 'serviceVehiclePrice.service')->get();
-
-        $events = $appointments->map(function ($appointment) {
-            return [
-                'id' => $appointment->id,
-                'title' => $appointment->serviceVehiclePrice->service->name ?? 'Servicio',
-                'start' => $appointment->appointment_date,
-                'end' => \Carbon\Carbon::parse($appointment->appointment_date)->addMinutes($appointment->serviceVehiclePrice->service->base_duration_minutes ?? 60)->toDateTimeString(),
-                'status' => $appointment->status,
-                'customer_name' => $appointment->customer->name ?? 'N/A',
-            ];
-        });
-
-        return response()->json($events);
-    }
-
-
 }

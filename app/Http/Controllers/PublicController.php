@@ -52,7 +52,7 @@ public function storeBooking(Request $request)
             'customer_id' => $data['customer_id'],
             'service_vehicle_price_id' => $data['service_vehicle_price_id'],
             'appointment_date' => $appointmentDateTime,
-            'status' => 'pending',
+            'status' => 'Pendiente',
             'total_price' => $data['total_price'],
             'admin_user_id' => null,
         ]);
@@ -159,22 +159,28 @@ public function storeBooking(Request $request)
     }
 
     // Ejemplo en PublicController
-    public function showBookingForm($serviceId)
-    {
-        $service = Service::with(['serviceVehiclePrices.vehicleType'])
-            ->findOrFail($serviceId);
+public function showBookingForm($serviceId)
+{
+    $service = Service::with(['serviceVehiclePrices.vehicleType'])
+        ->findOrFail($serviceId);
 
-        $vehiclePrices = $service->serviceVehiclePrices;
-        $extraServices = ALaCarteService::all();
+    $vehiclePrices = $service->serviceVehiclePrices;
+    $extraServices = ALaCarteService::all();
 
-        // Obtener citas futuras ocupadas
-        $bookedAppointments = Appointment::whereDate('appointment_date', '>=', now()->toDateString())
-            ->pluck('appointment_date')
-            ->map(function($dt) {
-                return \Carbon\Carbon::parse($dt)->format('Y-m-d H:i');
-            })->toArray();
+    // Obtener citas futuras ocupadas con estado Pendiente, Aceptado o Realizado
+    $blockedAppointments = Appointment::whereIn('status', ['Pendiente', 'Aceptado', 'Realizado'])
+        ->whereDate('appointment_date', '>=', now()->toDateString())
+        ->selectRaw("DATE(appointment_date) as date, EXTRACT(HOUR FROM appointment_date) as hour")
+        ->get()
+        ->map(function($a) {
+            return [
+                'date' => $a->date,
+                'hour' => str_pad($a->hour, 2, '0', STR_PAD_LEFT) . ':00'
+            ];
+        })
+        ->toArray();
 
-        return view('public.book_appointment', compact('service', 'vehiclePrices', 'extraServices', 'bookedAppointments'));
-    }
+    return view('public.book_appointment', compact('service', 'vehiclePrices', 'extraServices', 'blockedAppointments'));
+}
 
 }

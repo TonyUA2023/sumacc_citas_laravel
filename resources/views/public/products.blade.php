@@ -28,7 +28,7 @@
 .hero {
   display: flex;
   flex-direction: column;
-  height: 85vh;
+  height: 70vh;
 }
 
 .hero-image {
@@ -44,12 +44,12 @@
 
 .hero-content {
   background-color: rgba(0, 0, 0, 0.5);
-  padding: 1rem 2rem;
+  padding: 1rem 1rem;
   border-radius: 10px;
 }
 
 .hero-white {
-  height: 40vh;
+  height: 20vh;
   background-color: white;
   display: flex;
   align-items: center;
@@ -83,10 +83,10 @@ p {
 </style>
 
 {{-- Sección de introducción con logo y descripción --}}
-<section class="py-16 bg-white text-gray-800">
+<section class=" bg-white text-gray-800">
   <div class="container mx-auto px-4 text-center">
     <div class="mb-10">
-      <img src="{{ asset('logo/wayralogo.png') }}" alt="Wayra Auto Detailing" class="mx-auto mb-4 h-10" />
+      <img src="{{ asset('logo/logopng.png') }}" alt="Wayra Auto Detailing" class="mx-auto mb-4 h-52" />
       <h1 class="text-4xl font-bold">Products For The Perfectionist</h1>
       <p class="text-lg pt-4">
         Wayra Auto Detailing features a premier all-hand carwash facility. Your car will be pampered by an expert trained team who wash your car completely by hand with the best products.
@@ -165,8 +165,7 @@ p {
           <h3 class="text-xl italic text-gray-600 mb-4">{{ $product['subtitle'] }}</h3>
         @endif
         <p class="mb-6">{{ $product['description'] }}</p>
-        <a href="{{ $product['buttonLink'] }}" class="bg-black text-white py-2 px-6 rounded-md hover:bg-gray-700">{{ $product['buttonText'] }}</a>
-      </div>
+     </div>
     </div>
   </section>
 @endforeach

@@ -165,7 +165,9 @@
                     </tr>
                   </thead>
                   <tbody>
-                    @foreach ($service->serviceVehiclePrices as $price)
+                    @foreach ($service->serviceVehiclePrices->sortBy(function($price) {
+                        return $price->vehicleType->id ?? 0;
+                    }) as $price)
                       <tr class="{{ $loop->even ? 'bg-gray-100' : 'bg-white' }}">
                         <td class="border border-gray-300 px-3 py-2">{{ $price->vehicleType->name ?? 'N/A' }}</td>
                         <td class="border border-gray-300 text-right px-3 py-2">${{ number_format($price->price, 2) }}</td>

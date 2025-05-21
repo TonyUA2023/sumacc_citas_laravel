@@ -4,18 +4,18 @@
 
 {{-- Hero --}}
 <section class="hero bg-red-600 text-white py-12 text-center">
-    <h1 class="text-4xl font-bold mb-4">Reserva tu Servicio</h1>
-    <p class="text-lg max-w-3xl mx-auto">Selecciona tu vehículo para conocer precios, luego completa tus datos y agenda tu cita.</p>
+    <h1 class="text-4xl font-bold mb-4">Book Your Service</h1>
+    <p class="text-lg max-w-3xl mx-auto">Select your vehicle to see prices, then complete your information and schedule your appointment.</p>
 </section>
 
 <div class="flex flex-col lg:flex-row gap-8 p-6">
 
-    {{-- Formulario y selección izquierda --}}
+    {{-- Left form and selection --}}
     <div class="lg:w-2/3 space-y-8">
 
-        {{-- Servicio seleccionado --}}
+        {{-- Selected service --}}
         <section class="p-4 border rounded">
-            <h2 class="text-2xl font-bold mb-2">Servicio seleccionado</h2>
+            <h2 class="text-2xl font-bold mb-2">Selected Service</h2>
             <p class="font-semibold">{{ $service->name }}</p>
             <p>{{ $service->tagline }}</p>
             <p>{{ $service->exterior_description }}</p>
@@ -30,9 +30,9 @@
             <input type="hidden" name="appointment_date" id="appointment_date_hidden" value="">
             <input type="hidden" name="appointment_time" id="appointment_time_hidden" value="">
 
-            {{-- Paso 1: Selección de vehículo --}}
+            {{-- Step 1: Vehicle Selection --}}
             <section id="step-vehicle" class="p-6 border rounded shadow-lg bg-gray-50">
-                <h2 class="text-xl font-bold mb-6">Selecciona tu vehículo</h2>
+                <h2 class="text-xl font-bold mb-6">Select Your Vehicle</h2>
 
                 <div id="vehicle-options" class="space-y-4">
                     @foreach($vehiclePrices as $vp)
@@ -61,13 +61,13 @@
                         <div class="text-gray-600" id="selected-vehicle-price"></div>
                     </div>
                     <div id="selected-vehicle-icon" class="text-6xl select-none" style="width: 56px; height: 56px; display: flex; align-items: center; justify-content: center;"></div>
-                    <button type="button" id="change-vehicle" class="ml-4 text-red-600 hover:underline font-semibold">Cambiar vehículo</button>
+                    <button type="button" id="change-vehicle" class="ml-4 text-red-600 hover:underline font-semibold">Change Vehicle</button>
                 </div>
             </section>
 
-            {{-- Paso 2: Servicios extra --}}
+            {{-- Step 2: Extra Services --}}
             <section id="step-extras" class="p-6 border rounded mt-6 hidden">
-                <h2 class="text-xl font-bold mb-4">Servicios extra</h2>
+                <h2 class="text-xl font-bold mb-4">Extra Services</h2>
                 <div id="extra-services" class="flex flex-wrap gap-4 mb-6">
                     @foreach($extraServices as $extra)
                     <label
@@ -81,93 +81,125 @@
                 </div>
             </section>
 
-            {{-- Paso 3: Selección de fecha y hora --}}
+            {{-- Step 3: Date and Time Selection (Improved Version) --}}
             <section id="step-datetime" class="p-6 border rounded mt-6 hidden">
-                <h2 class="text-xl font-bold mb-4">Selecciona fecha y hora</h2>
+                <h2 class="text-xl font-bold mb-4">Select Date and Time</h2>
 
-                <div id="calendar-container" class="overflow-x-auto">
-                    <table class="table-auto border-collapse border border-gray-300 w-full text-center">
+                <div id="calendar-container" class="overflow-auto max-h-[400px] rounded border border-gray-200 shadow-sm bg-white">
+                    <table class="table-auto border-collapse w-full text-center">
                         <thead>
                             <tr>
-                                <th class="border border-gray-300 px-2 py-1">Día</th>
-                                <th class="border border-gray-300 px-2 py-1">7 AM</th>
-                                <th class="border border-gray-300 px-2 py-1">9 AM</th>
-                                <th class="border border-gray-300 px-2 py-1">11 AM</th>
-                                <th class="border border-gray-300 px-2 py-1">1 PM</th>
-                                <th class="border border-gray-300 px-2 py-1">3 PM</th>
-                                <th class="border border-gray-300 px-2 py-1">5 PM</th>
+                                <th class="px-3 py-2 bg-white sticky top-0 left-0 z-20 text-gray-600 font-medium border-b">Time / Day</th>
+                                {{-- The days will be generated dynamically here --}}
                             </tr>
                         </thead>
                         <tbody id="calendar-body">
-                            {{-- JS llenará esta tabla con días y botones de horario --}}
+                            {{-- The hours and cells will be generated dynamically --}}
                         </tbody>
                     </table>
                 </div>
             </section>
         </form>
 
-        {{-- Formulario cliente separado, oculto inicialmente --}}
-        <section id="client-info" class="p-4 border rounded mt-8 hidden">
-            <h2 class="text-xl font-bold mb-4">Tus datos (obligatorios)</h2>
+        {{-- Client form, initially hidden --}}
+        <section id="client-info" class="p-6 border rounded-lg shadow-sm mt-8 hidden bg-white">
+            <h2 class="text-xl font-bold mb-6 pb-3 border-b text-gray-800">Personal Information</h2>
 
             <form id="client-form" class="flex flex-col gap-6" onsubmit="return false;">
-                <div class="flex flex-col">
-                    <label for="client-name" class="mb-1 font-semibold">Nombre completo</label>
-                    <input type="text" name="name" id="client-name" placeholder="Nombre completo" class="w-full p-2 border rounded" required>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="flex flex-col">
+                        <label for="client-name" class="mb-2 text-sm font-medium text-gray-700">Full Name</label>
+                        <div class="relative">
+                            <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-gray-500">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
+                                </svg>
+                            </div>
+                            <input type="text" name="name" id="client-name" placeholder="Enter your full name" class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all" required>
+                        </div>
+                    </div>
+
+                    <div class="flex flex-col">
+                        <label for="client-email" class="mb-2 text-sm font-medium text-gray-700">Email Address</label>
+                        <div class="relative">
+                            <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-gray-500">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 0 1-2.25 2.25h-15a2.25 2.25 0 0 1-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25m19.5 0v.243a2.25 2.25 0 0 1-1.07 1.916l-7.5 4.615a2.25 2.25 0 0 1-2.36 0L3.32 8.91a2.25 2.25 0 0 1-1.07-1.916V6.75" />
+                                </svg>
+                            </div>
+                            <input type="email" name="email" id="client-email" placeholder="example@email.com" class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all" required>
+                        </div>
+                    </div>
                 </div>
 
-                <div class="flex flex-col">
-                    <label for="client-email" class="mb-1 font-semibold">Correo electrónico</label>
-                    <input type="email" name="email" id="client-email" placeholder="Correo electrónico" class="w-full p-2 border rounded" required>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="flex flex-col">
+                        <label for="client-phone" class="mb-2 text-sm font-medium text-gray-700">Phone Number</label>
+                        <div class="relative">
+                            <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-gray-500">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 1.5H8.25A2.25 2.25 0 0 0 6 3.75v16.5a2.25 2.25 0 0 0 2.25 2.25h7.5A2.25 2.25 0 0 0 18 20.25V3.75a2.25 2.25 0 0 0-2.25-2.25H13.5m-3 0V3h3V1.5m-3 0h3m-3 18.75h3" />
+                                </svg>
+                            </div>
+                            <input type="text" name="phone" id="client-phone" placeholder="Ex: 987654321" class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all" required>
+                        </div>
+                    </div>
+
+                    <div class="flex flex-col">
+                        <label for="client-address" class="mb-2 text-sm font-medium text-gray-700">Address</label>
+                        <div class="relative">
+                            <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-gray-500">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1 1 15 0Z" />
+                                </svg>
+                            </div>
+                            <input type="text" name="address" id="client-address" placeholder="Enter your complete address" class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all" required>
+                        </div>
+                    </div>
                 </div>
 
-                <div class="flex flex-col">
-                    <label for="client-phone" class="mb-1 font-semibold">Teléfono</label>
-                    <input type="text" name="phone" id="client-phone" placeholder="Teléfono" class="w-full p-2 border rounded" required>
+                <div class="flex flex-col items-center mt-4">
+                    <button id="save-client-btn" class="w-full max-w-xs bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-all transform hover:-translate-y-1 shadow-md font-medium flex items-center justify-center gap-2" type="submit">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                        </svg>
+                        Save Information
+                    </button>
+                    <p id="client-save-message" class="mt-3 text-sm"></p>
                 </div>
-
-                <div class="flex flex-col">
-                    <label for="client-address" class="mb-1 font-semibold">Dirección</label>
-                    <input type="text" name="address" id="client-address" placeholder="Dirección" class="w-full p-2 border rounded" required>
-                </div>
-
-                <button id="save-client-btn" class="bg-blue-600 text-white px-6 py-3 rounded hover:bg-blue-700 transition mt-4" type="submit">
-                    Guardar datos
-                </button>
-
-                <p id="client-save-message" class="mt-2 text-sm text-red-600"></p>
             </form>
         </section>
 
     </div>
 
-    {{-- Resumen derecho --}}
+    {{-- Right summary --}}
     <div class="lg:w-1/3 p-4 border rounded sticky top-20 h-max flex flex-col">
-        <h2 class="text-2xl font-bold mb-4">Resumen del pedido</h2>
+        <h2 class="text-2xl font-bold mb-4">Order Summary</h2>
         <div id="order-summary" class="space-y-2 flex-grow">
-            <p><strong>Servicio:</strong> <span id="summary-service">{{ $service->name }}</span></p>
-            <p><strong>Vehículo:</strong> <span id="summary-vehicle">No seleccionado</span></p>
-            <p><strong>Extras:</strong> <span id="summary-extras">Ninguno</span></p>
-            <p><strong>Cliente:</strong> <span id="summary-customer">No ingresado</span></p>
-            <p><strong>Fecha y hora:</strong> <span id="summary-datetime">No seleccionada</span></p>
+            <p><strong>Service:</strong> <span id="summary-service">{{ $service->name }}</span></p>
+            <p><strong>Vehicle:</strong> <span id="summary-vehicle">Not selected</span></p>
+            <p><strong>Extras:</strong> <span id="summary-extras">None</span></p>
+            <p><strong>Customer:</strong> <span id="summary-customer">Not entered</span></p>
+            <p><strong>Date and Time:</strong> <span id="summary-datetime">Not selected</span></p>
             <p class="font-bold text-lg"><strong>Total:</strong> $<span id="summary-total">0.00</span></p>
         </div>
         <p id="booking-error-msg" class="text-red-600 mt-2"></p>
-        <button id="book-appointment-btn" class="mt-6 bg-red-600 text-white py-3 px-6 rounded hover:bg-red-700 disabled:opacity-50" disabled>Agendar cita</button>
+        <button id="book-appointment-btn" class="mt-6 bg-red-600 text-white py-3 px-6 rounded hover:bg-red-700 disabled:opacity-50" disabled>Book Appointment</button>
     </div>
 
 </div>
 
-{{-- Modal para resumen y confirmación --}}
+{{-- Modal for summary and confirmation --}}
 <div id="booking-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50">
     <div class="bg-white rounded-lg max-w-lg w-full p-6 shadow-lg relative">
-        <h3 class="text-xl font-bold mb-4">Confirma tu cita</h3>
+        <h3 class="text-xl font-bold mb-4">Confirm Your Appointment</h3>
         <div id="modal-summary" class="space-y-2 text-gray-800 mb-6">
-            {{-- Resumen dinámico --}}
+            {{-- Dynamic summary --}}
         </div>
         <div class="flex justify-end gap-4">
-            <button id="modal-close-btn" class="px-4 py-2 rounded border border-gray-400 hover:bg-gray-100">Cerrar</button>
-            <button id="modal-confirm-btn" class="px-4 py-2 rounded bg-red-600 text-white hover:bg-red-700">Confirmar cita</button>
+            <button id="modal-close-btn" class="px-4 py-2 rounded border border-gray-400 hover:bg-gray-100">Close</button>
+            <button id="modal-confirm-btn" class="px-4 py-2 rounded bg-red-600 text-white hover:bg-red-700">Confirm Appointment</button>
         </div>
         <button id="modal-x-btn" class="absolute top-3 right-3 text-gray-600 hover:text-gray-900 text-xl font-bold">&times;</button>
         <p id="modal-error-msg" class="mt-2 text-red-600"></p>
@@ -190,30 +222,63 @@
         color: white;
     }
 
+    /* Estilos para botones del calendario */
     .calendar-btn {
-        border: 1px solid #ccc;
-        background: white;
-        padding: 8px 12px;
-        cursor: pointer;
-        transition: background-color 0.3s ease;
-        border-radius: 6px;
-        min-width: 70px;
+        font-weight: 500;
+        user-select: none;
+        transition: all 0.2s ease;
+        box-shadow: 0 1px 2px rgba(0,0,0,0.05);
     }
-    .calendar-btn:hover:not([disabled]) {
-        background-color: #fee2e2;
-    }
+
     .calendar-btn.selected {
-        background-color: #dc2626;
-        color: white;
+        background-color: #3B82F6 !important;
+        color: white !important;
+        border-color: #2563EB !important;
+        transform: scale(1.02);
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     }
+
+    .calendar-btn:hover:not(:disabled) {
+        transform: translateY(-1px);
+    }
+
     .calendar-btn:disabled {
-        background-color: #eee;
-        cursor: not-allowed;
+        opacity: 0.5;
+    }
+
+    /* Sticky first column and header */
+    #calendar-container table th:first-child,
+    #calendar-container table td:first-child {
+        position: sticky;
+        left: 0;
+        background-color: #f9fafb;
+        z-index: 20;
+    }
+
+    #calendar-container table thead th {
+        position: sticky;
+        top: 0;
+        background-color: #ffffff;
+        z-index: 15;
+    }
+    
+    #calendar-container table {
+        border-spacing: 6px;
+        border-collapse: separate;
+    }
+    
+    #calendar-container td {
+        padding: 3px;
     }
 </style>
 
 <script>
 document.addEventListener('DOMContentLoaded', () => {
+    // Datos de citas bloqueadas (fecha + hora) y estados
+    // Debes pasar desde backend las reservas con estado Pendiente, Aceptado, Realizado en formato ISO
+    // Ejemplo backend (pasar a blade): $blockedAppointments
+    const blockedAppointmentsRaw = @json($blockedAppointments ?? []);
+
     // --- ELEMENTOS DOM ---
     const vehicleOptions = document.getElementById('vehicle-options');
     const vehicleSelected = document.getElementById('vehicle-selected');
@@ -256,7 +321,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const modalConfirmBtn = document.getElementById('modal-confirm-btn');
     const modalErrorMsg = document.getElementById('modal-error-msg');
 
-    // --- FUNCIONES ---
+    // Elementos del calendario mejorado
+    const calendarBody = document.getElementById('calendar-body');
+    const calendarTheadRow = document.querySelector('#step-datetime thead tr');
+
+    // --- FUNCIONES UTILES ---
 
     function enableNextSteps() {
         stepExtras.classList.remove('hidden');
@@ -273,11 +342,11 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function resetSummary() {
-        summaryVehicle.textContent = 'No seleccionado';
-        summaryExtras.textContent = 'Ninguno';
+        summaryVehicle.textContent = 'Not selected';
+        summaryExtras.textContent = 'None';
         summaryTotal.textContent = '0.00';
-        summaryCustomer.textContent = 'No ingresado';
-        summaryDatetime.textContent = 'No seleccionada';
+        summaryCustomer.textContent = 'Not entered';
+        summaryDatetime.textContent = 'Not selected';
         appointmentDateInput.value = '';
         appointmentTimeInput.value = '';
         hiddenCustomerId.value = '';
@@ -299,12 +368,12 @@ document.addEventListener('DOMContentLoaded', () => {
             if (checkbox.checked) {
                 const name = label.querySelector('span.font-semibold').textContent;
                 const price = parseFloat(label.getAttribute('data-price')) || 0;
-                selectedExtras.push(`${name} ($${price.toFixed(2)})`);
+                selectedExtras.push(`${name} (${price.toFixed(2)})`);
                 extrasTotal += price;
             }
         });
 
-        summaryExtras.textContent = selectedExtras.length ? selectedExtras.join(', ') : 'Ninguno';
+        summaryExtras.textContent = selectedExtras.length ? selectedExtras.join(', ') : 'None';
         updateSummaryTotal();
     }
 
@@ -328,19 +397,18 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function updateBookButtonState() {
-        bookingErrorMsg.textContent = ''; // limpiar mensajes
+        bookingErrorMsg.textContent = ''; // clear messages
 
         const vehicleSelectedValid = selectedVehicleName.textContent && selectedVehicleName.textContent !== '';
         const customerIdValid = !!hiddenCustomerId.value;
         const datetimeValid = appointmentDateInput.value && appointmentTimeInput.value;
 
-        // Mostrar mensajes indicativos si no cumple
         if (!vehicleSelectedValid) {
-            bookingErrorMsg.textContent = 'Debe seleccionar un vehículo.';
+            bookingErrorMsg.textContent = 'You must select a vehicle.';
         } else if (!customerIdValid) {
-            bookingErrorMsg.textContent = 'Debe guardar sus datos de cliente.';
+            bookingErrorMsg.textContent = 'You must save your customer information.';
         } else if (!datetimeValid) {
-            bookingErrorMsg.textContent = 'Debe seleccionar fecha y hora.';
+            bookingErrorMsg.textContent = 'You must select date and time.';
         }
 
         bookBtn.disabled = !(vehicleSelectedValid && customerIdValid && datetimeValid);
@@ -460,9 +528,10 @@ document.addEventListener('DOMContentLoaded', () => {
         };
 
         if (!payload.name || !payload.email || !payload.phone_number || !payload.address) {
-            clientSaveMsg.textContent = 'Por favor, complete todos los campos.';
+            clientSaveMsg.classList.add('text-red-600');
+            clientSaveMsg.textContent = 'Please complete all fields.';
             saveClientBtn.disabled = false;
-            saveClientBtn.textContent = 'Guardar datos';
+            saveClientBtn.textContent = 'Save Information';
             return;
         }
 
@@ -483,7 +552,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             if (result.success) {
                 clientSaveMsg.style.color = 'green';
-                clientSaveMsg.textContent = 'Datos guardados correctamente.';
+                clientSaveMsg.textContent = 'Information saved successfully.';
 
                 hiddenCustomerId.value = result.customer.id;
                 summaryCustomer.textContent = `${result.customer.name} - ${result.customer.phone_number}`;
@@ -491,113 +560,174 @@ document.addEventListener('DOMContentLoaded', () => {
                 updateBookButtonState();
 
             } else {
-                clientSaveMsg.style.color = 'red';
-                clientSaveMsg.textContent = 'Error: ' + (result.message || 'No se pudo guardar.');
+                clientSaveMsg.classList.add('text-red-600');
+                clientSaveMsg.textContent = 'Error: ' + (result.message || 'Could not save information.');
             }
         } catch (error) {
-            clientSaveMsg.style.color = 'red';
-            clientSaveMsg.textContent = 'Error al guardar datos: ' + error.message;
+            clientSaveMsg.classList.add('text-red-600');
+            clientSaveMsg.textContent = 'Error saving data: ' + error.message;
         } finally {
             saveClientBtn.disabled = false;
-            saveClientBtn.textContent = 'Guardar datos';
+            saveClientBtn.textContent = 'Save Information';
         }
     });
 
-    // --- CALENDARIO ---
+    // --- CALENDARIO MEJORADO ---
 
-    const calendarBody = document.getElementById('calendar-body');
-
-    const availableTimes = ['07:00 AM', '09:00 AM', '11:00 AM', '01:00 PM', '03:00 PM', '05:00 PM'];
-
-    function getNextDates(days = 5) {
-        const dates = [];
-        const today = new Date();
-        for (let i = 0; i < days; i++) {
-            const date = new Date(today);
-            date.setDate(today.getDate() + i);
-            dates.push(date);
-        }
-        return dates;
+    // Horas que mostramos en eje Y (de 7am a 6pm)
+    const availableHours = [];
+    for(let h = 7; h <= 18; h++) {
+        // Formato 24h con dos dígitos
+        availableHours.push(h.toString().padStart(2, '0') + ':00');
     }
 
+    // Días (columnas) - desde hoy, rango 7 días
+    function getNextDays(daysCount = 7) {
+        const days = [];
+        const today = new Date();
+        for(let i=0; i<daysCount; i++) {
+            const d = new Date(today);
+            d.setDate(today.getDate() + i);
+            days.push(d);
+        }
+        return days;
+    }
+
+    // Formatear fecha para mostrar en encabezado y para valor YYYY-MM-DD
     function formatDateDisplay(date) {
-        return date.toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric' });
+        return date.toLocaleDateString('en-US', { weekday: 'short', day: 'numeric', month: 'short' }); // ex: Wed, 21 May
     }
 
     function formatDateValue(date) {
         return date.toISOString().split('T')[0];
     }
 
-    function getBookedSlots() {
-        return [
-            `${formatDateValue(new Date())} 09:00 AM`,
-            `${formatDateValue(new Date())} 01:00 PM`,
-            `${formatDateValue(new Date(new Date().setDate(new Date().getDate() + 1)))} 07:00 AM`,
-        ];
+    // Ver si una celda (día+hora) está bloqueada
+    function isBlocked(dateStr, hourStr) {
+        // Bloquea si en blockedAppointmentsRaw está ese día y hora
+        const blocked = blockedAppointmentsRaw.some(ba => ba.date === dateStr && ba.hour === hourStr);
+        if(blocked) return true;
+
+        // Bloquear antes de la hora actual también
+        const now = new Date();
+        const cellDateTime = new Date(dateStr + 'T' + hourStr + ':00');
+        // Si la fecha/hora es menor o igual que la hora actual, bloquear
+        if(cellDateTime <= now) return true;
+
+        return false;
     }
 
-    function renderCalendar() {
-        const dates = getNextDates(5);
-        const bookedSlots = getBookedSlots();
+    // Convertir 24h "HH:MM" a 12h AM/PM
+    function to12Hour(time24) {
+        const [hour, minute] = time24.split(':').map(Number);
+        const ampm = hour >= 12 ? 'PM' : 'AM';
+        let hour12 = hour % 12;
+        hour12 = hour12 ? hour12 : 12; // el 0 es 12
+        return `${hour12}:${minute.toString().padStart(2,'0')} ${ampm}`;
+    }
 
+    // Generar encabezado (días) dinámicamente
+    function renderCalendarHeader(days) {
+        // Limpiar encabezados existentes, excepto el primero
+        while (calendarTheadRow.children.length > 1) {
+            calendarTheadRow.removeChild(calendarTheadRow.lastChild);
+        }
+        
+        // El primer th ya está (Hora/Día), ahora añadimos los días
+        days.forEach(day => {
+            const th = document.createElement('th');
+            th.className = 'px-3 py-2 bg-white sticky top-0 z-10 text-gray-600 font-medium border-b';
+            
+            // Formato más detallado para los días como en la imagen
+            const dayName = day.toLocaleDateString('es-ES', { weekday: 'short' });
+            const dayNumber = day.getDate();
+            
+            const daySpan = document.createElement('div');
+            daySpan.className = 'text-sm';
+            daySpan.textContent = dayName;
+            
+            const dateSpan = document.createElement('div');
+            dateSpan.className = 'text-base';
+            dateSpan.textContent = dayNumber;
+            
+            th.appendChild(daySpan);
+            th.appendChild(dateSpan);
+            
+            calendarTheadRow.appendChild(th);
+        });
+    }
+
+    // Renderizar cuerpo con horas en filas y días en columnas
+    function renderCalendarBody(days, hours) {
         calendarBody.innerHTML = '';
 
-        dates.forEach(date => {
+        hours.forEach(hour => {
             const tr = document.createElement('tr');
 
-            const tdDay = document.createElement('td');
-            tdDay.classList.add('border', 'border-gray-300', 'px-2', 'py-1', 'font-semibold', 'whitespace-nowrap');
-            tdDay.textContent = formatDateDisplay(date);
-            tr.appendChild(tdDay);
+            // Primera columna: hora en formato 12h
+            const tdHour = document.createElement('td');
+            tdHour.className = 'px-3 py-2 bg-gray-50 sticky left-0 z-10 whitespace-nowrap font-medium text-gray-600 text-sm border-r';
+            tdHour.textContent = to12Hour(hour);
+            tr.appendChild(tdHour);
 
-            availableTimes.forEach(time => {
-                const tdTime = document.createElement('td');
-                tdTime.classList.add('border', 'border-gray-300', 'px-2', 'py-1');
+            days.forEach(day => {
+                const td = document.createElement('td');
+                td.className = 'px-2 py-1';
+
+                const dateStr = formatDateValue(day);
+                const hourStr = hour;
 
                 const btn = document.createElement('button');
                 btn.type = 'button';
-                btn.className = 'calendar-btn';
-                btn.textContent = time;
+                btn.className = 'calendar-btn w-full rounded py-2 px-3 text-center';
+                btn.textContent = to12Hour(hourStr);
 
-                const slotStr = `${formatDateValue(date)} ${time}`;
-                const isBooked = bookedSlots.includes(slotStr);
+                const blocked = isBlocked(dateStr, hourStr);
+                btn.disabled = blocked;
 
-                btn.disabled = isBooked;
-                if (isBooked) btn.title = 'Horario no disponible';
+                if(blocked) {
+                    btn.classList.add('bg-gray-100', 'text-gray-400', 'cursor-not-allowed', 'opacity-50');
+                } else {
+                    btn.classList.add('bg-white', 'text-gray-700', 'hover:bg-blue-50', 'border', 'border-gray-200');
+                    btn.addEventListener('click', () => {
+                        // Deseleccionar otros botones
+                        document.querySelectorAll('.calendar-btn.selected').forEach(b => b.classList.remove('selected'));
 
-                btn.addEventListener('click', () => {
-                    document.querySelectorAll('.calendar-btn.selected').forEach(b => b.classList.remove('selected'));
-                    btn.classList.add('selected');
+                        btn.classList.add('selected');
 
-                    appointmentDateInput.value = formatDateValue(date);
-                    appointmentTimeInput.value = time;
+                        appointmentDateInput.value = dateStr;
+                        appointmentTimeInput.value = hourStr;
 
-                    summaryDatetime.textContent = `${formatDateDisplay(date)} ${time}`;
+                        summaryDatetime.textContent = `${formatDateDisplay(day)} ${to12Hour(hour)}`;
 
-                    updateBookButtonState();
-                });
+                        updateBookButtonState();
+                    });
+                }
 
-                tdTime.appendChild(btn);
-                tr.appendChild(tdTime);
+                td.appendChild(btn);
+                tr.appendChild(td);
             });
 
             calendarBody.appendChild(tr);
         });
     }
 
-    renderCalendar();
+    // Renderizar calendario mejorado
+    const days = getNextDays(7);
+    renderCalendarHeader(days);
+    renderCalendarBody(days, availableHours);
 
     // --- MODAL PARA CONFIRMAR CITA ---
 
     function openModal() {
         modalErrorMsg.textContent = '';
         modalSummary.innerHTML = `
-            <p><strong>Servicio:</strong> {{ $service->name }}</p>
-            <p><strong>Vehículo:</strong> ${selectedVehicleName.textContent} ${selectedVehiclePrice.textContent}</p>
+            <p><strong>Service:</strong> {{ $service->name }}</p>
+            <p><strong>Vehicle:</strong> ${selectedVehicleName.textContent} ${selectedVehiclePrice.textContent}</p>
             <p><strong>Extras:</strong> ${summaryExtras.textContent}</p>
-            <p><strong>Cliente:</strong> ${summaryCustomer.textContent}</p>
-            <p><strong>Fecha y hora:</strong> ${summaryDatetime.textContent}</p>
-            <p class="font-bold text-lg"><strong>Total:</strong> $${summaryTotal.textContent}</p>
+            <p><strong>Customer:</strong> ${summaryCustomer.textContent}</p>
+            <p><strong>Date and Time:</strong> ${summaryDatetime.textContent}</p>
+            <p class="font-bold text-lg"><strong>Total:</strong> ${summaryTotal.textContent}</p>
         `;
         bookingModal.classList.remove('hidden');
     }
@@ -606,12 +736,10 @@ document.addEventListener('DOMContentLoaded', () => {
         bookingModal.classList.add('hidden');
     }
 
-    // Abrir modal cuando se clickea "Agendar cita"
     bookBtn.addEventListener('click', () => {
         openModal();
     });
 
-    // Cerrar modal botones
     modalCloseBtn.addEventListener('click', () => {
         closeModal();
     });
@@ -619,11 +747,10 @@ document.addEventListener('DOMContentLoaded', () => {
         closeModal();
     });
 
-    // Confirmar cita - enviar al backend
     modalConfirmBtn.addEventListener('click', async () => {
         modalErrorMsg.textContent = '';
         modalConfirmBtn.disabled = true;
-        modalConfirmBtn.textContent = 'Guardando...';
+        modalConfirmBtn.textContent = 'Saving...';
 
         const customerId = hiddenCustomerId.value;
         const appointmentDate = appointmentDateInput.value;
@@ -633,17 +760,16 @@ document.addEventListener('DOMContentLoaded', () => {
         const extrasChecked = [...document.querySelectorAll('#extra-services input[type="checkbox"]:checked')].map(i => i.value);
         const totalPrice = parseFloat(summaryTotal.textContent) || 0;
 
-        // Validar datos para prevenir fallos
         let errors = [];
-        if (!customerId) errors.push('Debe guardar sus datos primero.');
-        if (!serviceVehiclePriceId) errors.push('Seleccione un vehículo.');
-        if (!appointmentDate || !appointmentTime) errors.push('Seleccione fecha y hora.');
-        if (totalPrice <= 0) errors.push('Total inválido.');
+        if (!customerId) errors.push('You must save your information first.');
+        if (!serviceVehiclePriceId) errors.push('Select a vehicle.');
+        if (!appointmentDate || !appointmentTime) errors.push('Select date and time.');
+        if (totalPrice <= 0) errors.push('Invalid total.');
 
         if (errors.length > 0) {
             modalErrorMsg.textContent = errors.join(' ');
             modalConfirmBtn.disabled = false;
-            modalConfirmBtn.textContent = 'Confirmar cita';
+            modalConfirmBtn.textContent = 'Confirm Appointment';
             return;
         }
 
@@ -669,7 +795,7 @@ document.addEventListener('DOMContentLoaded', () => {
             });
 
             if (!response.ok) {
-                let errorMessage = 'Error al agendar la cita.';
+                let errorMessage = 'Error scheduling the appointment.';
                 try {
                     const errorData = await response.json();
                     errorMessage = errorData.message || errorMessage;
@@ -681,22 +807,20 @@ document.addEventListener('DOMContentLoaded', () => {
 
             if (result.success) {
                 closeModal();
-                alert('Cita agendada con éxito! ID: ' + result.appointment_id);
-                // Redirigir al origen, por ejemplo:
+                alert('Appointment scheduled successfully! ID: ' + result.appointment_id);
                 window.location.href = "{{ url()->previous() }}";
             } else {
-                modalErrorMsg.textContent = 'Error: ' + (result.message || 'No se pudo guardar la cita.');
+                modalErrorMsg.textContent = 'Error: ' + (result.message || 'Could not schedule the appointment.');
             }
         } catch (error) {
             modalErrorMsg.textContent = 'Error: ' + error.message;
         } finally {
             modalConfirmBtn.disabled = false;
-            modalConfirmBtn.textContent = 'Confirmar cita';
+            modalConfirmBtn.textContent = 'Confirm Appointment';
         }
     });
 
-    // --- Inicializaciones ---
-
+    // Inicializaciones
     hideNextSteps();
     resetSummary();
     updateSummaryExtras();

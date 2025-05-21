@@ -3,7 +3,6 @@
 @section('title', 'Servicios a la Carta')
 
 @section('content')
-<h1 class="text-2xl font-bold mb-6">Servicios a la Carta</h1>
 
 @if(session('success'))
     <p class="bg-green-200 text-green-800 p-2 mb-4 rounded">{{ session('success') }}</p>

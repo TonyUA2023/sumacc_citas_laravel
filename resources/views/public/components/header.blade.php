@@ -1,9 +1,9 @@
 @php
   $navLinks = [
     ['name' => 'Home', 'href' => url('/')],
-    ['name' => 'Premium Detailing Services', 'href' => url('/detailing-services')],
-    ['name' => 'Super Wash', 'href' => url('/car-wash')],
-    ['name' => 'Products', 'href' => url('/products')],
+    ['name' => 'Premium Detailing', 'href' => url('/detailing-services')],
+    ['name' => 'Hand Super Wash', 'href' => url('/car-wash')],
+    ['name' => 'Premium Products', 'href' => url('/products')],
   ];
 @endphp
 
@@ -11,14 +11,14 @@
   <div class="container mx-auto px-4 py-3 flex justify-between items-center">
     <!-- Logo -->
     <div class="flex items-center space-x-3">
-      <img src="{{ asset('logo/wayralogo.png') }}" alt="Logo de Wayra" class="h-16 w-auto" />
-      <a href="{{ url('/') }}" class="text-2xl font-bold text-center">Wayra <br /> <span class="font-normal text-xl">LUXE MOBILE WASH - LLC</span></a>
+      <img src="{{ asset('logo/logopng.png') }}" alt="Logo de Wayra" class="h-20 w-auto" />
+      <a href="{{ url('/') }}" class="text-2xl font-bold text-center">Wayra <br /> <span class="font-normal text-xl">MOBILE DETAILING</span></a>
     </div>
 
     <!-- Navigation Links -->
     <nav class="hidden md:flex justify-center space-x-6">
       @foreach ($navLinks as $link)
-        <a href="{{ $link['href'] }}" class="nav-link relative hover:text-gray-400 @if(request()->is(trim($link['href'], '/'))) active @endif">{{ $link['name'] }}</a>
+        <a href="{{ $link['href'] }}" class="text-lg nav-link relative hover:text-gray-400 @if(request()->is(trim($link['href'], '/'))) active @endif">{{ $link['name'] }}</a>
       @endforeach
     </nav>
 
