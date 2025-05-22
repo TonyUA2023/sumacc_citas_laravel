@@ -16,11 +16,6 @@
           </a>
         </li>
         <li class="mb-3 transition duration-300 ease-in-out transform hover:translate-x-2">
-          <a href="#aboutUs" class="text-gray-300 hover:text-white flex items-center">
-            <span class="w-1 h-1 bg-blue-500 rounded-full mr-2"></span>About Us
-          </a>
-        </li>
-        <li class="mb-3 transition duration-300 ease-in-out transform hover:translate-x-2">
           <a href="{{ url('/detailing-services') }}" class="text-gray-300 hover:text-white flex items-center">
             <span class="w-1 h-1 bg-blue-500 rounded-full mr-2"></span>Detailing Services
           </a>
@@ -33,11 +28,6 @@
         <li class="mb-3 transition duration-300 ease-in-out transform hover:translate-x-2">
           <a href="{{ url('/products') }}" class="text-gray-300 hover:text-white flex items-center">
             <span class="w-1 h-1 bg-blue-500 rounded-full mr-2"></span>Products
-          </a>
-        </li>
-        <li class="transition duration-300 ease-in-out transform hover:translate-x-2">
-          <a href="{{ url('/contactform') }}" class="text-gray-300 hover:text-white flex items-center">
-            <span class="w-1 h-1 bg-blue-500 rounded-full mr-2"></span>Contact
           </a>
         </li>
       </ul>

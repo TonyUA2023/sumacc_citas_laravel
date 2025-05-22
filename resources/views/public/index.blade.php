@@ -134,11 +134,20 @@
 <section class="max-w-5xl mx-auto flex flex-col md:flex-row items-center bg-gray-900 text-white rounded-lg shadow-lg p-8 my-16">
   <!-- Texto gerente (izquierda) -->
   <div class="text-left md:max-w-xl md:mr-12 order-2 md:order-1">
-    <h3 class="text-3xl font-bold mb-2">Williams Merino</h3>
-    <p class="font-semibold mb-4">Gerente Administrativo</p>
+    <h3 class="text-3xl font-bold mb-2">The Story of Williams Merino
+</h3>
+    <p class="font-semibold mb-4">
+Founder of Wayra Mobile Detailing
+</p>
     <p class="text-gray-300 leading-relaxed">
-      Juan Pérez es el Gerente Administrativo de Wayra Deep Down Detail, con más de 15 años de experiencia en gestión y administración empresarial. Su liderazgo y visión estratégica han sido clave para el crecimiento y la consolidación de la empresa. Juan se enfoca en optimizar procesos internos, asegurar la calidad en el servicio y brindar una atención excepcional a nuestros clientes.
-    </p>
+
+Williams Merino is a graduate of the Universidad Privada del Norte, with studies in Civil Engineering and Finance. His solid technical and financial background, combined with his passion for cars and customer service, led him to create Wayra Mobile Detailing, a business that goes beyond simple car washing and detailing: it's a premium experience designed to care for each vehicle with the utmost precision.
+<br>
+Williams firmly believes that customers are the most valuable asset of any company, and that's why he asserts:
+"If we provide our customers with the best service for all their automotive needs, they will be our customers for life."
+<br>
+With this vision, Wayra has established itself as a benchmark in the Pacific Northwest, where excellence, trust, and commitment to every detail are the foundation of success.
+For Williams, every car he services is an opportunity to demonstrate that passion and professionalism can transform a service into a true work of art.    </p>
   </div>
 
   <!-- Foto gerente (derecha, centrada) -->
@@ -180,7 +189,6 @@
 
 @include('public.components.location')
 
-@include('public.components.details')
 
 @endsection
 

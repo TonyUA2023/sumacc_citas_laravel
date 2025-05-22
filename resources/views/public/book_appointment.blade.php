@@ -49,7 +49,7 @@
                         </div>
 
                         <div class="text-4xl select-none" style="width: 48px; height: 48px; display: flex; align-items: center; justify-content: center;">
-                            {{ $vp->vehicleType->icon }}
+                            <img src="/vehicles/{{ $vp->vehicleType->icon }}" alt="no se puede mostrar">
                         </div>
                     </label>
                     @endforeach
@@ -120,7 +120,7 @@
                     </div>
 
                     <div class="flex flex-col">
-                        <label for="client-email" class="mb-2 text-sm font-medium text-gray-700">Email Address</label>
+                        <label for="client-email" class="mb-2 text-sm font-medium text-gray-700">Email Address </label>
                         <div class="relative">
                             <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-gray-500">
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
@@ -146,7 +146,7 @@
                     </div>
 
                     <div class="flex flex-col">
-                        <label for="client-address" class="mb-2 text-sm font-medium text-gray-700">Address</label>
+                        <label for="client-address" class="mb-2 text-sm font-medium text-gray-700">Address (Work address)</label>
                         <div class="relative">
                             <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-gray-500">
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
