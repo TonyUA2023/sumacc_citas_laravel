@@ -3,26 +3,26 @@
 @section('content')
 
 {{-- Hero --}}
-<section class="hero bg-red-600 text-white py-12 text-center">
-    <h1 class="text-4xl font-bold mb-4">Book Your Service</h1>
-    <p class="text-lg max-w-3xl mx-auto">Select your vehicle to see prices, then complete your information and schedule your appointment.</p>
+<section class="hero bg-red-600 text-white py-12 text-center px-4 sm:px-6 lg:px-8">
+    <h1 class="text-3xl sm:text-4xl font-bold mb-4">Book Your Service</h1>
+    <p class="text-base sm:text-lg max-w-xl mx-auto">Select your vehicle to see prices, then complete your information and schedule your appointment.</p>
 </section>
 
-<div class="flex flex-col lg:flex-row gap-8 p-6">
+<div class="flex flex-col lg:flex-row gap-6 p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto">
 
     {{-- Left form and selection --}}
     <div class="lg:w-2/3 space-y-8">
 
         {{-- Selected service --}}
         <section class="p-4 border rounded">
-            <h2 class="text-2xl font-bold mb-2">Selected Service</h2>
-            <p class="font-semibold">{{ $service->name }}</p>
-            <p>{{ $service->tagline }}</p>
-            <p>{{ $service->exterior_description }}</p>
-            <p>{{ $service->interior_description }}</p>
+            <h2 class="text-xl sm:text-2xl font-bold mb-2">Selected Service</h2>
+            <p class="font-semibold text-base sm:text-lg">{{ $service->name }}</p>
+            <p class="text-sm sm:text-base">{{ $service->tagline }}</p>
+            <p class="text-sm sm:text-base">{{ $service->exterior_description }}</p>
+            <p class="text-sm sm:text-base">{{ $service->interior_description }}</p>
         </section>
 
-        <form id="booking-form" method="POST" action="{{ route('public.book.store') }}" class="mx-16">
+        <form id="booking-form" method="POST" action="{{ route('public.book.store') }}" class="mx-0 sm:mx-16">
             @csrf
 
             <input type="hidden" name="service_id" value="{{ $service->id }}">
@@ -31,25 +31,25 @@
             <input type="hidden" name="appointment_time" id="appointment_time_hidden" value="">
 
             {{-- Step 1: Vehicle Selection --}}
-            <section id="step-vehicle" class="p-6 border rounded shadow-lg bg-gray-50">
-                <h2 class="text-xl font-bold mb-6">Select Your Vehicle</h2>
+            <section id="step-vehicle" class="p-4 sm:p-6 border rounded shadow-lg bg-gray-50">
+                <h2 class="text-lg sm:text-xl font-bold mb-6">Select Your Vehicle</h2>
 
                 <div id="vehicle-options" class="space-y-4">
                     @foreach($vehiclePrices as $vp)
                     <label
-                        class="flex items-center justify-between p-4 border rounded cursor-pointer hover:bg-red-100 transition duration-300 ease-in-out"
+                        class="flex items-center justify-between p-3 sm:p-4 border rounded cursor-pointer hover:bg-red-100 transition duration-300 ease-in-out"
                         style="user-select:none;"
                         data-price="{{ $vp->price }}">
-                        <div class="flex items-center gap-4">
-                            <input type="radio" name="vehicle_price_id" value="{{ $vp->id }}" class="mr-4 w-5 h-5" required>
+                        <div class="flex items-center gap-3 sm:gap-4">
+                            <input type="radio" name="vehicle_price_id" value="{{ $vp->id }}" class="mr-3 sm:mr-4 w-4 h-4 sm:w-5 sm:h-5" required>
                             <div>
-                                <div class="font-semibold text-lg">{{ $vp->vehicleType->name }}</div>
-                                <div class="text-gray-600">${{ number_format($vp->price, 2) }}</div>
+                                <div class="font-semibold text-base sm:text-lg">{{ $vp->vehicleType->name }}</div>
+                                <div class="text-gray-600 text-sm sm:text-base">${{ number_format($vp->price, 2) }}</div>
                             </div>
                         </div>
 
-                        <div class="text-4xl select-none" style="width: 48px; height: 48px; display: flex; align-items: center; justify-content: center;">
-                            <img src="/vehicles/{{ $vp->vehicleType->icon }}" alt="no se puede mostrar">
+                        <div class="select-none flex items-center justify-center" style="width: 40px; height: 40px; min-width:40px; min-height:40px;">
+                            <img src="/vehicles/{{ $vp->vehicleType->icon }}" alt="vehicle icon" class="max-h-8 max-w-8 object-contain">
                         </div>
                     </label>
                     @endforeach
@@ -57,21 +57,21 @@
 
                 <div id="vehicle-selected" class="hidden p-4 border rounded bg-white shadow-md flex items-center justify-between">
                     <div>
-                        <div class="font-semibold text-lg" id="selected-vehicle-name"></div>
-                        <div class="text-gray-600" id="selected-vehicle-price"></div>
+                        <div class="font-semibold text-base sm:text-lg" id="selected-vehicle-name"></div>
+                        <div class="text-gray-600 text-sm sm:text-base" id="selected-vehicle-price"></div>
                     </div>
-                    <div id="selected-vehicle-icon" class="text-6xl select-none" style="width: 56px; height: 56px; display: flex; align-items: center; justify-content: center;"></div>
-                    <button type="button" id="change-vehicle" class="ml-4 text-red-600 hover:underline font-semibold">Change Vehicle</button>
+                    <div id="selected-vehicle-icon" class="select-none flex items-center justify-center" style="width: 48px; height: 48px;"></div>
+                    <button type="button" id="change-vehicle" class="ml-4 text-red-600 hover:underline font-semibold text-sm sm:text-base">Change Vehicle</button>
                 </div>
             </section>
 
             {{-- Step 2: Extra Services --}}
-            <section id="step-extras" class="p-6 border rounded mt-6 hidden">
-                <h2 class="text-xl font-bold mb-4">Extra Services</h2>
-                <div id="extra-services" class="flex flex-wrap gap-4 mb-6">
+            <section id="step-extras" class="p-4 sm:p-6 border rounded mt-6 hidden">
+                <h2 class="text-lg sm:text-xl font-bold mb-4">Extra Services</h2>
+                <div id="extra-services" class="flex flex-wrap gap-3 sm:gap-4 mb-6">
                     @foreach($extraServices as $extra)
                     <label
-                        class="extra-btn flex flex-col items-center justify-center border rounded cursor-pointer px-4 py-3 select-none transition-colors duration-300"
+                        class="extra-btn flex flex-col items-center justify-center border rounded cursor-pointer px-3 sm:px-4 py-2 sm:py-3 select-none transition-colors duration-300 text-sm sm:text-base"
                         data-price="{{ $extra->price }}">
                         <input type="checkbox" name="extras[]" value="{{ $extra->id }}" class="hidden" />
                         <span class="font-semibold">{{ $extra->name }}</span>
@@ -82,14 +82,14 @@
             </section>
 
             {{-- Step 3: Date and Time Selection (Improved Version) --}}
-            <section id="step-datetime" class="p-6 border rounded mt-6 hidden">
-                <h2 class="text-xl font-bold mb-4">Select Date and Time</h2>
+            <section id="step-datetime" class="p-4 sm:p-6 border rounded mt-6 hidden">
+                <h2 class="text-lg sm:text-xl font-bold mb-4">Select Date and Time</h2>
 
-                <div id="calendar-container" class="overflow-auto max-h-[400px] rounded border border-gray-200 shadow-sm bg-white">
-                    <table class="table-auto border-collapse w-full text-center">
+                <div id="calendar-container" class="overflow-auto max-h-96 rounded border border-gray-200 shadow-sm bg-white">
+                    <table class="table-auto border-collapse w-full text-center min-w-[600px]">
                         <thead>
                             <tr>
-                                <th class="px-3 py-2 bg-white sticky top-0 left-0 z-20 text-gray-600 font-medium border-b">Time / Day</th>
+                                <th class="px-2 py-1 bg-white sticky top-0 left-0 z-20 text-gray-600 font-medium border-b text-xs sm:text-sm whitespace-nowrap">Time / Day</th>
                                 {{-- The days will be generated dynamically here --}}
                             </tr>
                         </thead>
@@ -102,59 +102,59 @@
         </form>
 
         {{-- Client form, initially hidden --}}
-        <section id="client-info" class="p-6 border rounded-lg shadow-sm mt-8 hidden bg-white">
-            <h2 class="text-xl font-bold mb-6 pb-3 border-b text-gray-800">Personal Information</h2>
+        <section id="client-info" class="p-4 sm:p-6 border rounded-lg shadow-sm mt-8 hidden bg-white">
+            <h2 class="text-lg sm:text-xl font-bold mb-6 pb-3 border-b text-gray-800">Personal Information</h2>
 
-            <form id="client-form" class="flex flex-col gap-6" onsubmit="return false;">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <form id="client-form" class="flex flex-col gap-4 sm:gap-6" onsubmit="return false;">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
                     <div class="flex flex-col">
-                        <label for="client-name" class="mb-2 text-sm font-medium text-gray-700">Full Name</label>
+                        <label for="client-name" class="mb-1 text-xs sm:text-sm font-medium text-gray-700">Full Name</label>
                         <div class="relative">
-                            <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-gray-500">
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+                            <div class="absolute inset-y-0 left-0 flex items-center pl-2 sm:pl-3 pointer-events-none text-gray-500">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4 sm:w-5 sm:h-5">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
                                 </svg>
                             </div>
-                            <input type="text" name="name" id="client-name" placeholder="Enter your full name" class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all" required>
+                            <input type="text" name="name" id="client-name" placeholder="Enter your full name" class="w-full pl-8 sm:pl-10 pr-3 py-2 sm:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all text-sm sm:text-base" required>
                         </div>
                     </div>
 
                     <div class="flex flex-col">
-                        <label for="client-email" class="mb-2 text-sm font-medium text-gray-700">Email Address </label>
+                        <label for="client-email" class="mb-1 text-xs sm:text-sm font-medium text-gray-700">Email Address </label>
                         <div class="relative">
-                            <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-gray-500">
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+                            <div class="absolute inset-y-0 left-0 flex items-center pl-2 sm:pl-3 pointer-events-none text-gray-500">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4 sm:w-5 sm:h-5">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 0 1-2.25 2.25h-15a2.25 2.25 0 0 1-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25m19.5 0v.243a2.25 2.25 0 0 1-1.07 1.916l-7.5 4.615a2.25 2.25 0 0 1-2.36 0L3.32 8.91a2.25 2.25 0 0 1-1.07-1.916V6.75" />
                                 </svg>
                             </div>
-                            <input type="email" name="email" id="client-email" placeholder="example@email.com" class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all" required>
+                            <input type="email" name="email" id="client-email" placeholder="example@email.com" class="w-full pl-8 sm:pl-10 pr-3 py-2 sm:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all text-sm sm:text-base" required>
                         </div>
                     </div>
                 </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
                     <div class="flex flex-col">
-                        <label for="client-phone" class="mb-2 text-sm font-medium text-gray-700">Phone Number</label>
+                        <label for="client-phone" class="mb-1 text-xs sm:text-sm font-medium text-gray-700">Phone Number</label>
                         <div class="relative">
-                            <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-gray-500">
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+                            <div class="absolute inset-y-0 left-0 flex items-center pl-2 sm:pl-3 pointer-events-none text-gray-500">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4 sm:w-5 sm:h-5">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 1.5H8.25A2.25 2.25 0 0 0 6 3.75v16.5a2.25 2.25 0 0 0 2.25 2.25h7.5A2.25 2.25 0 0 0 18 20.25V3.75a2.25 2.25 0 0 0-2.25-2.25H13.5m-3 0V3h3V1.5m-3 0h3m-3 18.75h3" />
                                 </svg>
                             </div>
-                            <input type="text" name="phone" id="client-phone" placeholder="Ex: 987654321" class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all" required>
+                            <input type="text" name="phone" id="client-phone" placeholder="Ex: 987654321" class="w-full pl-8 sm:pl-10 pr-3 py-2 sm:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all text-sm sm:text-base" required>
                         </div>
                     </div>
 
                     <div class="flex flex-col">
-                        <label for="client-address" class="mb-2 text-sm font-medium text-gray-700">Address (Work address)</label>
+                        <label for="client-address" class="mb-1 text-xs sm:text-sm font-medium text-gray-700">Address (Work address)</label>
                         <div class="relative">
-                            <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-gray-500">
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+                            <div class="absolute inset-y-0 left-0 flex items-center pl-2 sm:pl-3 pointer-events-none text-gray-500">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4 sm:w-5 sm:h-5">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1 1 15 0Z" />
                                 </svg>
                             </div>
-                            <input type="text" name="address" id="client-address" placeholder="Enter your complete address" class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all" required>
+                            <input type="text" name="address" id="client-address" placeholder="Enter your complete address" class="w-full pl-8 sm:pl-10 pr-3 py-2 sm:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all text-sm sm:text-base" required>
                         </div>
                     </div>
                 </div>
@@ -174,9 +174,9 @@
     </div>
 
     {{-- Right summary --}}
-    <div class="lg:w-1/3 p-4 border rounded sticky top-20 h-max flex flex-col">
-        <h2 class="text-2xl font-bold mb-4">Order Summary</h2>
-        <div id="order-summary" class="space-y-2 flex-grow">
+    <div class="lg:w-1/3 p-4 border rounded sticky top-16 h-max flex flex-col bg-white shadow-sm max-h-[calc(100vh-4rem)] overflow-y-auto">
+        <h2 class="text-xl sm:text-2xl font-bold mb-4">Order Summary</h2>
+        <div id="order-summary" class="space-y-2 flex-grow text-sm sm:text-base">
             <p><strong>Service:</strong> <span id="summary-service">{{ $service->name }}</span></p>
             <p><strong>Vehicle:</strong> <span id="summary-vehicle">Not selected</span></p>
             <p><strong>Extras:</strong> <span id="summary-extras">None</span></p>
@@ -184,25 +184,25 @@
             <p><strong>Date and Time:</strong> <span id="summary-datetime">Not selected</span></p>
             <p class="font-bold text-lg"><strong>Total:</strong> $<span id="summary-total">0.00</span></p>
         </div>
-        <p id="booking-error-msg" class="text-red-600 mt-2"></p>
-        <button id="book-appointment-btn" class="mt-6 bg-red-600 text-white py-3 px-6 rounded hover:bg-red-700 disabled:opacity-50" disabled>Book Appointment</button>
+        <p id="booking-error-msg" class="text-red-600 mt-2 text-sm"></p>
+        <button id="book-appointment-btn" class="mt-6 bg-red-600 text-white py-3 px-6 rounded hover:bg-red-700 disabled:opacity-50 text-sm sm:text-base" disabled>Book Appointment</button>
     </div>
 
 </div>
 
 {{-- Modal for summary and confirmation --}}
-<div id="booking-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50">
-    <div class="bg-white rounded-lg max-w-lg w-full p-6 shadow-lg relative">
+<div id="booking-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50 p-4">
+    <div class="bg-white rounded-lg max-w-lg w-full p-6 shadow-lg relative max-h-[90vh] overflow-y-auto">
         <h3 class="text-xl font-bold mb-4">Confirm Your Appointment</h3>
-        <div id="modal-summary" class="space-y-2 text-gray-800 mb-6">
+        <div id="modal-summary" class="space-y-2 text-gray-800 mb-6 text-sm sm:text-base">
             {{-- Dynamic summary --}}
         </div>
-        <div class="flex justify-end gap-4">
+        <div class="flex justify-end gap-4 flex-wrap">
             <button id="modal-close-btn" class="px-4 py-2 rounded border border-gray-400 hover:bg-gray-100">Close</button>
             <button id="modal-confirm-btn" class="px-4 py-2 rounded bg-red-600 text-white hover:bg-red-700">Confirm Appointment</button>
         </div>
-        <button id="modal-x-btn" class="absolute top-3 right-3 text-gray-600 hover:text-gray-900 text-xl font-bold">&times;</button>
-        <p id="modal-error-msg" class="mt-2 text-red-600"></p>
+        <button id="modal-x-btn" class="absolute top-3 right-3 text-gray-600 hover:text-gray-900 text-2xl font-bold leading-none">&times;</button>
+        <p id="modal-error-msg" class="mt-2 text-red-600 text-sm"></p>
     </div>
 </div>
 
@@ -211,6 +211,8 @@
         background-color: white;
         color: #333;
         user-select: none;
+        min-width: 90px;
+        text-align: center;
     }
 
     .extra-btn:hover {
@@ -228,6 +230,8 @@
         user-select: none;
         transition: all 0.2s ease;
         box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+        font-size: 0.75rem; /* Ajuste para móviles */
+        padding: 0.25rem 0.5rem;
     }
 
     .calendar-btn.selected {
@@ -253,6 +257,7 @@
         left: 0;
         background-color: #f9fafb;
         z-index: 20;
+        min-width: 48px;
     }
 
     #calendar-container table thead th {
@@ -260,16 +265,24 @@
         top: 0;
         background-color: #ffffff;
         z-index: 15;
+        font-size: 0.75rem;
     }
     
     #calendar-container table {
         border-spacing: 6px;
         border-collapse: separate;
+        min-width: 600px; /* Para scroll horizontal en móvil */
     }
     
     #calendar-container td {
         padding: 3px;
     }
+
+    /* Scroll horizontal en móvil */
+    #calendar-container {
+        -webkit-overflow-scrolling: touch;
+    }
+
 </style>
 
 <script>
