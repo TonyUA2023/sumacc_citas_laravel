@@ -1,248 +1,333 @@
+{{-- resources/views/public/services.blade.php --}}
 @extends('public.layout')
 
 @section('content')
 
-<section class="hero">
-    <div class="hero-image" style="background-image: url('{{ asset('services/interior-cleaning/bmw-2.jpg') }}');">
+{{-- Contenedor overflow-hidden global --}}
+<div class="overflow-x-hidden overflow-y-hidden bg-gray-900 text-gray-200">
 
-        <div class="hero-content">
-            <h1>Premium Mobile Detailing</h1>
-            <p>We bring the shine to your driveway!</p>
-        </div>
-    </div>
-    <div class="hero-white">
-        <div class="hero-text">
-            <h2>Show your car love!</h2>
-            <p>
-                Indulge it with top-notch detailing services and state-of-the-art techniques combined with premium products at the full-service Wayra Auto Detailing. Our expert Vehicle Appearance Technicians will carry out a thorough cleaning, restoration, and finishing process to get your car looking its absolute best.
-            </p>
-        </div>
-    </div>
-</section>
+  @php
+  // Cargar la categoría Mobile Detailing (id = 2)
+  $mobileDetailingCategory = $categories->firstWhere('id', 2);
+  // Orden de servicios
+  $order = [2, 9, 4, 5];
+  $orderedServices = $mobileDetailingCategory
+  ? $mobileDetailingCategory->services->sortBy(fn($s) => array_search($s->id, $order))
+  : collect();
+  @endphp
 
-<style>
-    /* Reset some defaults */
-    h1, h2, p {
-        margin: 0;
-        padding: 0;
-    }
-
-    .hero {
-        display: flex;
-        flex-direction: column;
-        height: 85vh;
-        min-height: 500px;
-        max-height: 800px;
-        width: 100%;
-    }
-
-    .hero-image {
-        height: 45vh;
-        min-height: 250px;
-        background-size: cover;
-        background-position: center;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: white;
-        text-align: center;
-        padding: 0 1rem;
-    }
-
-    .hero-content {
-        background-color: rgba(0, 0, 0, 0.5);
-        padding: 1rem 2rem;
-        border-radius: 10px;
-        max-width: 90%;
-    }
-
-    .hero-content h1 {
-        font-size: 2.5rem;
-        line-height: 1.2;
-    }
-
-    .hero-content p {
-        font-size: 1.25rem;
-        margin-top: 0.5rem;
-    }
-
-    .hero-white {
-        height: 40vh;
-        min-height: 220px;
-        background-color: white;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        padding: 1rem;
-        box-sizing: border-box;
-    }
-
-    .hero-text {
-        max-width: 900px;
-        padding: 0 1rem;
-        text-align: center;
-    }
-
-    .hero-text h2 {
-        font-size: 2.5rem;
-        color: #333;
-        font-weight: 700;
-        margin-bottom: 0.5rem;
-    }
-
-    .hero-text p {
-        font-size: 1.2rem;
-        color: #333;
-        font-weight: 400;
-        line-height: 1.5;
-    }
-
-    /* Responsive Typography */
-    @media (max-width: 768px) {
-        .hero-content h1 {
-            font-size: 2rem;
-        }
-        .hero-content p {
-            font-size: 1.1rem;
-        }
-        .hero-text h2 {
-            font-size: 2rem;
-        }
-        .hero-text p {
-            font-size: 1rem;
-        }
-    }
-
-    @media (max-width: 480px) {
-        .hero-content h1 {
-            font-size: 1.5rem;
-        }
-        .hero-content p {
-            font-size: 1rem;
-        }
-        .hero-text h2 {
-            font-size: 1.5rem;
-        }
-        .hero-text p {
-            font-size: 0.9rem;
-        }
-    }
-
-    /* General paragraph style */
-    p {
-        font-size: 1.25rem;
-        line-height: 1.5;
-    }
-</style>
-
-<section id="gallery" class="bg-gray-900 text-white py-16 px-6 md:px-20">
-    <!-- EXTERIOR CLEANING -->
-    <div class="max-w-7xl mx-auto mb-20">
-        <h3 class="text-center text-4xl font-semibold mb-8 tracking-wide uppercase">Exterior Cleaning</h3>
-        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 mb-8">
-            <img src="{{ asset('services/top/ext-1.jpg') }}" alt="Wayra Mobile Detailing Exterior Cleaning"
-                class="rounded-xl object-cover w-full h-64 sm:h-72 md:h-80 transition-transform duration-300 hover:scale-105 shadow-lg">
-            <img src="{{ asset('services/top/ext-2.jpg') }}" alt="Wayra Mobile Detailing Exterior Cleaning"
-                class="rounded-xl object-cover w-full h-64 sm:h-72 md:h-80 transition-transform duration-300 hover:scale-105 shadow-lg">
-            <img src="{{ asset('services/top/ext-3.jpg') }}" alt="Wayra Mobile Detailing Exterior Cleaning"
-                class="rounded-xl object-cover w-full h-64 sm:h-72 md:h-80 transition-transform duration-300 hover:scale-105 shadow-lg">
-        </div>
-        <p class="text-center max-w-3xl mx-auto text-lg leading-relaxed text-gray-300">
-            Wayra Mobile Detailing provides a complete range of services for restoring, preserving, and maintaining the exterior of your vehicle. Our team takes great pride in our work and treats every car as if it were our own. We won't settle for anything less than your car looking its very best! Let us show you just how amazing your vehicle can look after a day with Wayra Mobile Detailing.
-        </p>
-    </div>
-
-    <!-- INTERIOR CLEANING -->
-    <div class="max-w-7xl mx-auto mb-20 bg-white rounded-3xl py-14 px-6 sm:px-10 shadow-xl">
-        <h3 class="text-center text-4xl font-semibold mb-8 text-gray-900 tracking-wide uppercase">Interior Cleaning</h3>
-        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 mb-8">
-            <img src="{{ asset('services/top/int-1.jpg') }}" alt="Wayra Mobile Detailing Interior Cleaning"
-                class="rounded-xl object-cover w-full h-64 sm:h-72 md:h-80 shadow-md">
-            <img src="{{ asset('services/top/int-2.jpg') }}" alt="Wayra Mobile Detailing Interior Cleaning"
-                class="rounded-xl object-cover w-full h-64 sm:h-72 md:h-80 shadow-md">
-            <img src="{{ asset('services/top/int-3.jpg') }}" alt="Wayra Mobile Detailing Interior Cleaning"
-                class="rounded-xl object-cover w-full h-64 sm:h-72 md:h-80 shadow-md">
-        </div>
-        <p class="text-center max-w-3xl mx-auto text-gray-700 text-lg leading-relaxed px-4 sm:px-0">
-            At Wayra Mobile Detailing, our mission is to rejuvenate your car’s interior, making it look and feel like new. We utilize the industry’s top cleaning techniques to care for every surface inside your vehicle, using only premium products to thoroughly clean and restore them.
-        </p>
-    </div>
-</section>
-
-<section id="services" class="py-16 bg-white text-gray-800">
-  <div class="container mx-auto px-4 space-y-16 max-w-7xl">
-
-    @php
-      $mobileDetailingCategory = $categories->firstWhere('id', 2);
-    @endphp
-
-    @if ($mobileDetailingCategory && $mobileDetailingCategory->services->count())
-      <h2 class="text-3xl font-bold mb-8 text-center text-red-600">{{ $mobileDetailingCategory->category_name }}</h2>
-
-      @foreach ($mobileDetailingCategory->services->sortBy('id') as $index => $service)
+  {{-- Hero Section Dark con Carrusel --}}
+  <section
+    class="relative w-full h-screen bg-black overflow-hidden"
+    data-aos="fade"
+    data-aos-duration="1000">
+    {{-- Swiper Container --}}
+    <div class="swiper hero-swiper absolute inset-0">
+      <div class="swiper-wrapper">
         @php
-          $reverse = $index % 2 === 0;
+        $heroImages = [
+        asset('carros/detail2.jpg'),
+        asset('carros/detail.jpg'),
+        asset('carros/detail3.jpg'),
+        asset('carros/detail4.jpg'),
+        asset('carros/detail5.jpg'),
+        asset('carros/detail6.jpg'),
+        ];
         @endphp
 
-        <section class="py-16 bg-white text-gray-800">
-          <div class="container mx-auto px-4">
-            <div class="flex flex-col lg:flex-row {{ $reverse ? 'lg:flex-row-reverse' : '' }} gap-8 items-start">
-              <!-- Detalles del Servicio -->
-              <div class="bg-gray-50 p-6 shadow-lg rounded-md lg:w-1/2">
-                <h2 class="text-3xl font-bold mb-2 text-red-600">{{ $service->name }}</h2>
-                <p class="text-lg font-semibold mb-2">{{ $service->tagline ?? 'Duration and price info not available' }}</p>
+        @foreach($heroImages as $img)
+        <div class="swiper-slide">
+          <div
+            class="absolute inset-0 bg-cover bg-center filter brightness-50"
+            style="background-image: url('{{ $img }}'); transform: scale(1.05);"></div>
+        </div>
+        @endforeach
+      </div>
 
-                @if ($service->exterior_description)
-                  <div class="mb-4">
-                    <p class="font-bold">Exterior Cleaning:</p>
-                    <p class="text-sm leading-relaxed text-gray-700">{{ $service->exterior_description }}</p>
-                  </div>
-                @endif
+      {{-- Progress Bar Pagination --}}
+      <div class="swiper-pagination swiper-pagination-progressbar !bottom-10"></div>
+    </div>
 
-                @if ($service->interior_description)
-                  <div class="mb-4">
-                    <p class="font-bold">Interior Cleaning:</p>
-                    <p class="text-sm leading-relaxed text-gray-700">{{ $service->interior_description }}</p>
-                  </div>
-                @endif
+    {{-- Dark Gradient Overlay --}}
+    <div class="absolute inset-0 bg-gradient-to-b from-black/95 via-black/75 to-black/95"></div>
+    {{-- Semi-Opaque Black Layer --}}
+    <div class="absolute inset-0 bg-black/50"></div>
 
-                <a href="{{ route('public.book', $service->id) }}" class="mt-4 inline-block bg-black text-white py-2 px-4 rounded-md hover:bg-gray-700 transition-colors duration-300">
-                  Schedule Now
-                </a>
-              </div>
+    {{-- Animated Blurs --}}
+    <div class="absolute inset-0 pointer-events-none">
+      <div class="absolute top-20 left-10 w-72 h-72 bg-blue-500/30 rounded-full blur-3xl animate-pulse-slow animation-delay-1000"></div>
+      <div class="absolute bottom-20 right-10 w-96 h-96 bg-red-500/30 rounded-full blur-3xl animate-pulse-slow animation-delay-2000"></div>
+    </div>
 
-              <!-- Tabla de Precios -->
-              <div class="bg-white p-4 shadow-md rounded-md lg:w-1/2 overflow-x-auto">
-                <h3 class="text-xl font-semibold mb-4">Vehicle Pricing</h3>
-                <table class="min-w-full table-auto border-collapse border border-gray-300 text-sm">
-                  <thead>
-                    <tr class="bg-gray-200">
-                      <th class="border border-gray-300 text-left px-3 py-2">Vehicle Type</th>
-                      <th class="border border-gray-300 text-right px-3 py-2">Price</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    @foreach ($service->serviceVehiclePrices->sortBy(function($price) {
-                        return $price->vehicleType->id ?? 0;
-                    }) as $price)
-                      <tr class="{{ $loop->even ? 'bg-gray-100' : 'bg-white' }}">
-                        <td class="border border-gray-300 px-3 py-2">{{ $price->vehicleType->name ?? 'N/A' }}</td>
-                        <td class="border border-gray-300 text-right px-3 py-2">${{ number_format($price->price, 2) }}</td>
-                      </tr>
-                    @endforeach
-                  </tbody>
-                </table>
-              </div>
-            </div>
+    {{-- Hero Text --}}
+    <div class="relative z-10 flex flex-col items-center justify-center h-full text-center px-6 hero-content">
+      <h1
+        class="text-5xl md:text-7xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-red-500 drop-shadow-lg"
+        data-aos="fade-up"
+        data-aos-delay="200">
+        MOBILE DETAILING SERVICES
+      </h1>
+      <p
+        class="mt-4 text-lg md:text-2xl text-gray-300 max-w-2xl"
+        data-aos="fade-up"
+        data-aos-delay="400">
+        High-quality detailing brought right to your door. Book now and shine on!
+      </p>
+    </div>
+  </section>
+  {{-- Premium Brands Showcase --}}
+  <section class="relative bg-gradient-to-b from-black via-gray-950 to-black py-20 overflow-hidden">
+    <div class="absolute inset-0 bg-blue-900/5"></div>
+
+    <div class="relative" data-aos="fade">
+      <h4 class="text-center text-2xl font-light text-gray-500 mb-12 tracking-widest uppercase">Trusted by Premium Brands</h4>
+
+      <div class="relative flex overflow-hidden">
+        <div class="flex animate-infinite-scroll whitespace-nowrap">
+          @php
+          $brands = [
+          'audi.png', 'bmw.png', 'corvet.png', 'ferrrari.png', 'ford.png',
+          'lambo.png', 'maseratti.png', 'mercedes.png', 'tesla.png',
+          'toyota.png', 'volkswagen.png'
+          ];
+          $allBrands = array_merge($brands, $brands, $brands); // triplicado para efecto continuo
+          @endphp
+
+          @foreach($allBrands as $logo)
+          <div class="flex-shrink-0 mx-8">
+            <img
+              src="{{ asset('brands/' . $logo) }}"
+              alt="{{ pathinfo($logo, PATHINFO_FILENAME) }}"
+              class="h-20 md:h-24 object-contain filter brightness-50 hover:brightness-100 transition-all duration-500 transform hover:scale-110" />
           </div>
-        </section>
+          @endforeach
+        </div>
+      </div>
+    </div>
+  </section>
+
+{{-- Servicios Mobile Detailing en Dark Mode --}}
+<section
+  id="services"
+  class="py-16 bg-gray-900 text-gray-200 px-6 lg:px-16 overflow-x-hidden overflow-y-hidden">
+  <div class="container mx-auto space-y-12">
+    @if($mobileDetailingCategory && $mobileDetailingCategory->services->count())
+      <h2 class="text-3xl font-bold text-center text-red-400" data-aos="fade-up">
+        {{ $mobileDetailingCategory->category_name }}
+      </h2>
+
+      @php
+        $order = [2, 9, 4, 5];
+        $orderedServices = $mobileDetailingCategory->services->sortBy(function ($service) use ($order) {
+          return array_search($service->id, $order);
+        });
+      @endphp
+
+      @foreach($orderedServices as $index => $service)
+        @php $reverse = $index % 2 === 0; @endphp
+        <div
+          class="flex flex-col lg:flex-row {{ $reverse ? 'lg:flex-row-reverse' : '' }} gap-8 items-stretch"
+          data-aos="fade-up"
+          data-aos-delay="{{ $index * 100 }}">
+          
+          {{-- Detalles Servicio --}}
+          <div class="bg-gray-800 p-6 rounded-2xl shadow-lg lg:w-1/2">
+            <h3 class="text-2xl font-bold text-red-400 mb-2">{{ $service->name }}</h3>
+            <p class="italic mb-1">{{ $service->tagline }}</p>
+            @if($service->description)
+              <p class="mb-2">{{ $service->description }}</p>
+            @endif
+
+            @if($service->recommended_frequency)
+            <p class="mb-4">Recommendation: {{ $service->recommended_frequency }}</p>
+            @endif
+            @if($service->exterior_description)
+              <div class="mb-3">
+                <p class="font-semibold">Exterior Detail:</p>
+                <p class="text-gray-400">{{ $service->exterior_description }}</p>
+              </div>
+            @endif
+
+            @if($service->interior_description)
+              <div class="mb-3">
+                <p class="font-semibold">Interior Detail:</p>
+                <p class="text-gray-400">{{ $service->interior_description }}</p>
+              </div>
+            @endif
+
+            <a
+              href="{{ route('booking.service', ['service' => $service->id]) }}"
+              class="mt-4 inline-block bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-6 rounded-full transition">
+              Schedule Now
+            </a>
+          </div>
+
+          {{-- Tabla Precios --}}
+          <div class="bg-gray-800 p-4 rounded-2xl shadow-inner overflow-x-auto lg:w-1/2">
+            <h4 class="text-xl font-semibold mb-3">Vehicle Pricing</h4>
+            <table class="min-w-full table-auto text-sm">
+              <thead>
+                <tr class="bg-gray-700">
+                  <th class="px-4 py-2 text-left">Vehicle Type</th>
+                  <th class="px-4 py-2 text-right">{{ $service->price_label }}</th>
+                </tr>
+              </thead>
+              <tbody>
+                @foreach($service->serviceVehiclePrices->sortBy('vehicleType.id') as $price)
+                  <tr class="{{ $loop->even ? 'bg-gray-800' : '' }}">
+                    <td class="px-4 py-2">{{ $price->vehicleType->name }}</td>
+                    <td class="px-4 py-2 text-right text-green-400">
+                      ${{ number_format($price->price, 2) }}
+                    </td>
+                  </tr>
+                @endforeach
+              </tbody>
+            </table>
+          </div>
+        </div>
       @endforeach
 
     @else
-      <p class="text-center">No Mobile Detailing services available at the moment.</p>
+      <p class="text-center text-gray-400">No Mobile Detailing services available.</p>
     @endif
-
   </div>
 </section>
+
+  {{-- A La Carte Extras --}}
+  @if(isset($aLaCarteServices) && $aLaCarteServices->isNotEmpty())
+  <section id="a-la-carte" class="py-16 bg-gray-800 text-gray-200 px-6 lg:px-20">
+    <div class="text-center mb-8" data-aos="fade-up">
+      <h2 class="text-3xl font-bold text-red-400">A La Carte Services</h2>
+      <p class="mt-2 text-gray-400">Add these extras to any wash</p>
+    </div>
+    <div class="overflow-x-auto" data-aos="fade-up" data-aos-delay="200">
+      <table class="min-w-full table-auto text-gray-200">
+        <thead>
+          <tr class="bg-gray-700">
+            <th class="px-4 py-2 text-left">Service</th>
+            <th class="px-4 py-2 text-right">Price</th>
+          </tr>
+        </thead>
+        <tbody>
+          @foreach($aLaCarteServices as $extra)
+          <tr class="{{ $loop->even ? 'bg-gray-800' : 'bg-gray-700' }}">
+            <td class="px-4 py-2">{{ $extra->name }}</td>
+            <td class="px-4 py-2 text-right">
+              {{ is_null($extra->price) ? 'Inquire' : '$'.number_format($extra->price, 2) }}
+            </td>
+          </tr>
+          @endforeach
+        </tbody>
+      </table>
+    </div>
+  </section>
+  @endif
+
+  @include('public.components.details')
+
+  <section
+    id="gallery"
+    class="py-16 bg-gray-900 text-gray-200 px-6 lg:px-16 overflow-hidden"
+    data-aos="fade-up">
+    <!-- Título -->
+    <h2 class="text-3xl font-bold text-center mb-12 text-red-400">Gallery & Video</h2>
+
+    <!-- Galería de imágenes -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+      @foreach (range(1, 9) as $i)
+      <div class="h-96 bg-cover bg-center rounded-lg shadow-lg" style="background-image:url('{{ asset("carros/detail{$i}.jpg") }}')"></div>
+      @endforeach
+    </div>
+
+    <!-- Galería de videos responsiva -->
+    <div class="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
+      @foreach (range(1, 4) as $v)
+      <div class="aspect-w-16 aspect-h-9">
+        <video
+          class="w-full h-[35rem] rounded-lg object-cover shadow-lg"
+          src="{{ asset("carros/VID{$v}.mp4") }}"
+          autoplay
+          muted
+          loop
+          controls
+          playsinline></video>
+      </div>
+      @endforeach
+    </div>
+  </section>
+
+
+
+</div> {{-- cierre overflow wrapper --}}
+
+<style>
+  .hero-swiper .swiper-slide>div {
+    transition: transform 10s ease-out;
+  }
+
+  .swiper-pagination-bullet-active {
+    background: #ff4d4d;
+  }
+
+  /* Progressbar Container */
+  .swiper-pagination-progressbar {
+    position: absolute;
+    bottom: 10px !important;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: rgba(255, 255, 255, 0.2);
+    z-index: 10;
+  }
+
+  /* Progressbar Fill */
+  .swiper-pagination-progressbar-fill {
+    background: #ff4d4d;
+    width: 0%;
+    height: 100%;
+    transition: width 0.3s ease;
+  }
+
+  @keyframes infinite-scroll {
+    0% {
+      transform: translateX(0);
+    }
+
+    100% {
+      transform: translateX(-33.333%);
+    }
+
+    /* Ajusta este valor según el contenido */
+  }
+
+  .animate-infinite-scroll {
+    animation: infinite-scroll 40s linear infinite;
+  }
+</style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    new Swiper('.hero-swiper', {
+      loop: true,
+      autoplay: {
+        delay: 2000,
+        disableOnInteraction: false
+      },
+      effect: 'fade',
+      fadeEffect: {
+        crossFade: true
+      },
+      speed: 1000,
+      pagination: {
+        el: '.swiper-pagination',
+        type: 'progressbar',
+      },
+    });
+    AOS.init({
+      duration: 800,
+      once: true
+    });
+  });
+</script>
 
 @endsection

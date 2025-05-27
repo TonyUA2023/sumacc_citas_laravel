@@ -3,7 +3,13 @@
     <!-- Company Information Section -->
     <div class="transform transition duration-300 hover:translate-y-[-5px]">
       <h3 class="text-2xl font-bold mb-4 text-white border-b border-blue-500 pb-2 inline-block">Wayra Deep Down Detail</h3>
-      <p class="text-gray-300 mt-4 leading-relaxed">We offer home car washing and detailing services to give you convenience and a like-new car without leaving home.</p>
+      <p class="text-gray-300 mt-4 leading-relaxed">Wayra Deep Down Detail – Premium Auto Detailing
+
+We bring the highest quality auto care directly to your doorstep throughout the Seattle, Kirkland, Lynnwood, Edmonds, Bellevue, Everett. We provide full coverage in King and Snohomish counties and the Pacific Northwest. Using top-tier products and professional techniques, we guarantee your car will look flawless and protected.
+<br>
+✨ Quality, luxury, and convenience in every service.
+📅 Schedule your appointment today and let us pamper your vehicle. 🚘✨
+</p>
     </div>
 
     <!-- Quick Links Section -->
@@ -17,12 +23,12 @@
         </li>
         <li class="mb-3 transition duration-300 ease-in-out transform hover:translate-x-2">
           <a href="{{ url('/detailing-services') }}" class="text-gray-300 hover:text-white flex items-center">
-            <span class="w-1 h-1 bg-blue-500 rounded-full mr-2"></span>Detailing Services
+            <span class="w-1 h-1 bg-blue-500 rounded-full mr-2"></span>Premium Detailing
           </a>
         </li>
         <li class="mb-3 transition duration-300 ease-in-out transform hover:translate-x-2">
           <a href="{{ url('/car-wash') }}" class="text-gray-300 hover:text-white flex items-center">
-            <span class="w-1 h-1 bg-blue-500 rounded-full mr-2"></span>Car Wash
+            <span class="w-1 h-1 bg-blue-500 rounded-full mr-2"></span>Hand Super Wash
           </a>
         </li>
         <li class="mb-3 transition duration-300 ease-in-out transform hover:translate-x-2">

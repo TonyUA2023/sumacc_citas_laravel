@@ -100,9 +100,14 @@ public function storeBooking(Request $request)
             $q->with('serviceVehiclePrices.vehicleType');
         }])->get();
 
-        $vehicleTypes = VehicleType::all();
+        $vehicleTypes      = VehicleType::all();
+        $aLaCarteServices  = ALaCarteService::all();              // ← Carga todos los extras
 
-        return view('public.car-wash', compact('categories', 'vehicleTypes'));
+        return view('public.car-wash', compact(
+            'categories',
+            'vehicleTypes',
+            'aLaCarteServices'                                  // ← Pásalos al Blade
+        ));
     }
 
     public function products()

@@ -8,13 +8,13 @@
     <p class="text-base sm:text-lg max-w-xl mx-auto">Select your vehicle to see prices, then complete your information and schedule your appointment.</p>
 </section>
 
-<div class="flex flex-col lg:flex-row gap-6 p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto">
+<div class="flex flex-col lg:flex-row gap-6 p-4 sm:p-6 lg:p-8 max-w-8xl mx-auto">
 
     {{-- Left form and selection --}}
-    <div class="lg:w-2/3 space-y-8">
+    <div class="lg:w-3/4 space-y-8">
 
         {{-- Selected service --}}
-        <section class="p-4 border rounded">
+        <section class="p-4 border rounded ">
             <h2 class="text-xl sm:text-2xl font-bold mb-2">Selected Service</h2>
             <p class="font-semibold text-base sm:text-lg">{{ $service->name }}</p>
             <p class="text-sm sm:text-base">{{ $service->tagline }}</p>
@@ -81,7 +81,7 @@
                 </div>
             </section>
 
-            {{-- Step 3: Date and Time Selection (Improved Version) --}}
+            {{-- Step 3: Date and Time Selection --}}
             <section id="step-datetime" class="p-4 sm:p-6 border rounded mt-6 hidden">
                 <h2 class="text-lg sm:text-xl font-bold mb-4">Select Date and Time</h2>
 
@@ -174,7 +174,7 @@
     </div>
 
     {{-- Right summary --}}
-    <div class="lg:w-1/3 p-4 border rounded sticky top-16 h-max flex flex-col bg-white shadow-sm max-h-[calc(100vh-4rem)] overflow-y-auto">
+    <div class="lg:w-1/4 p-4 border rounded sticky top-16 h-max flex flex-col bg-white shadow-sm max-h-[calc(100vh-4rem)] overflow-y-auto">
         <h2 class="text-xl sm:text-2xl font-bold mb-4">Order Summary</h2>
         <div id="order-summary" class="space-y-2 flex-grow text-sm sm:text-base">
             <p><strong>Service:</strong> <span id="summary-service">{{ $service->name }}</span></p>
@@ -288,8 +288,6 @@
 <script>
 document.addEventListener('DOMContentLoaded', () => {
     // Datos de citas bloqueadas (fecha + hora) y estados
-    // Debes pasar desde backend las reservas con estado Pendiente, Aceptado, Realizado en formato ISO
-    // Ejemplo backend (pasar a blade): $blockedAppointments
     const blockedAppointmentsRaw = @json($blockedAppointments ?? []);
 
     // --- ELEMENTOS DOM ---
@@ -306,7 +304,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const selectedVehiclePrice = document.getElementById('selected-vehicle-price');
     const selectedVehicleIcon = document.getElementById('selected-vehicle-icon');
 
-    // Resumen DOM
     const summaryVehicle = document.getElementById('summary-vehicle');
     const summaryExtras = document.getElementById('summary-extras');
     const summaryTotal = document.getElementById('summary-total');
@@ -315,17 +312,14 @@ document.addEventListener('DOMContentLoaded', () => {
     const summaryDatetime = document.getElementById('summary-datetime');
     const bookingErrorMsg = document.getElementById('booking-error-msg');
 
-    // Inputs ocultos
     const hiddenCustomerId = document.getElementById('customer_id');
     const appointmentDateInput = document.getElementById('appointment_date_hidden');
     const appointmentTimeInput = document.getElementById('appointment_time_hidden');
 
-    // Formulario cliente
     const clientForm = document.getElementById('client-form');
     const saveClientBtn = document.getElementById('save-client-btn');
     const clientSaveMsg = document.getElementById('client-save-message');
 
-    // Botones de reservar y modal
     const bookBtn = document.getElementById('book-appointment-btn');
     const bookingModal = document.getElementById('booking-modal');
     const modalSummary = document.getElementById('modal-summary');
@@ -334,26 +328,22 @@ document.addEventListener('DOMContentLoaded', () => {
     const modalConfirmBtn = document.getElementById('modal-confirm-btn');
     const modalErrorMsg = document.getElementById('modal-error-msg');
 
-    // Elementos del calendario mejorado
     const calendarBody = document.getElementById('calendar-body');
     const calendarTheadRow = document.querySelector('#step-datetime thead tr');
 
     // --- FUNCIONES UTILES ---
-
     function enableNextSteps() {
         stepExtras.classList.remove('hidden');
         stepDatetime.classList.remove('hidden');
         clientInfoSection.classList.remove('hidden');
         restInputs.forEach(input => input.disabled = false);
     }
-
     function hideNextSteps() {
         stepExtras.classList.add('hidden');
         stepDatetime.classList.add('hidden');
         clientInfoSection.classList.add('hidden');
         restInputs.forEach(input => input.disabled = true);
     }
-
     function resetSummary() {
         summaryVehicle.textContent = 'Not selected';
         summaryExtras.textContent = 'None';
@@ -366,16 +356,13 @@ document.addEventListener('DOMContentLoaded', () => {
         bookingErrorMsg.textContent = '';
         modalErrorMsg.textContent = '';
     }
-
     function updateSummaryVehicle() {
         summaryVehicle.textContent = selectedVehicleName.textContent + ' ' + selectedVehiclePrice.textContent;
         updateSummaryTotal();
     }
-
     function updateSummaryExtras() {
         let selectedExtras = [];
         let extrasTotal = 0;
-
         extraLabels.forEach(label => {
             const checkbox = label.querySelector('input[type="checkbox"]');
             if (checkbox.checked) {
@@ -385,37 +372,29 @@ document.addEventListener('DOMContentLoaded', () => {
                 extrasTotal += price;
             }
         });
-
         summaryExtras.textContent = selectedExtras.length ? selectedExtras.join(', ') : 'None';
         updateSummaryTotal();
     }
-
     function updateSummaryTotal() {
         let extrasTotal = 0;
-
         extraLabels.forEach(label => {
             const checkbox = label.querySelector('input[type="checkbox"]');
             if (checkbox.checked) {
                 extrasTotal += parseFloat(label.getAttribute('data-price')) || 0;
             }
         });
-
         let basePrice = 0;
         if (summaryVehicle.textContent !== 'No seleccionado') {
             const match = summaryVehicle.textContent.match(/\$(\d+(\.\d{1,2})?)/);
             basePrice = match ? parseFloat(match[1]) : 0;
         }
-
         summaryTotal.textContent = (basePrice + extrasTotal).toFixed(2);
     }
-
     function updateBookButtonState() {
-        bookingErrorMsg.textContent = ''; // clear messages
-
-        const vehicleSelectedValid = selectedVehicleName.textContent && selectedVehicleName.textContent !== '';
+        bookingErrorMsg.textContent = '';
+        const vehicleSelectedValid = summaryVehicle.textContent && summaryVehicle.textContent !== 'Not selected';
         const customerIdValid = !!hiddenCustomerId.value;
         const datetimeValid = appointmentDateInput.value && appointmentTimeInput.value;
-
         if (!vehicleSelectedValid) {
             bookingErrorMsg.textContent = 'You must select a vehicle.';
         } else if (!customerIdValid) {
@@ -423,28 +402,20 @@ document.addEventListener('DOMContentLoaded', () => {
         } else if (!datetimeValid) {
             bookingErrorMsg.textContent = 'You must select date and time.';
         }
-
         bookBtn.disabled = !(vehicleSelectedValid && customerIdValid && datetimeValid);
     }
 
     // --- VEHÍCULO ---
-
     radios.forEach(radio => {
         radio.addEventListener('change', () => {
             const label = radio.closest('label');
             if (!label) return;
-
             const nameDiv = label.querySelector('div > div.font-semibold');
             const priceDiv = label.querySelector('div > div.text-gray-600');
             selectedVehicleName.textContent = nameDiv ? nameDiv.textContent : '';
             selectedVehiclePrice.textContent = priceDiv ? priceDiv.textContent : '';
-
-            const iconDiv = label.querySelector('div.text-4xl');
-            selectedVehicleIcon.textContent = iconDiv ? iconDiv.textContent.trim() : '';
-
             vehicleOptions.style.transition = 'opacity 0.5s ease';
             vehicleOptions.style.opacity = '0';
-
             setTimeout(() => {
                 vehicleOptions.classList.add('hidden');
                 vehicleSelected.classList.remove('hidden');
@@ -452,70 +423,55 @@ document.addEventListener('DOMContentLoaded', () => {
                 vehicleSelected.style.transition = 'opacity 0.5s ease';
                 setTimeout(() => vehicleSelected.style.opacity = '1', 10);
             }, 500);
-
             enableNextSteps();
             updateSummaryVehicle();
-
-            // Reset extras visual y resumen
             extraLabels.forEach(label => {
                 const checkbox = label.querySelector('input[type="checkbox"]');
                 checkbox.checked = false;
                 label.classList.remove('selected');
             });
             updateSummaryExtras();
-
             updateBookButtonState();
         });
     });
-
     changeVehicleBtn.addEventListener('click', () => {
         vehicleSelected.style.transition = 'opacity 0.5s ease';
         vehicleSelected.style.opacity = '0';
-
         setTimeout(() => {
             vehicleSelected.classList.add('hidden');
             vehicleOptions.classList.remove('hidden');
             vehicleOptions.style.opacity = '0';
             setTimeout(() => vehicleOptions.style.opacity = '1', 10);
-
             hideNextSteps();
-
             radios.forEach(radio => radio.checked = false);
             resetSummary();
-
             extraLabels.forEach(label => {
                 const checkbox = label.querySelector('input[type="checkbox"]');
                 checkbox.checked = false;
                 label.classList.remove('selected');
             });
             updateSummaryExtras();
-
             updateBookButtonState();
         }, 500);
     });
 
     // --- EXTRAS ---
-
     extraLabels.forEach(label => {
-        label.addEventListener('click', e => {
+        label.addEventListener('click', () => {
             const checkbox = label.querySelector('input[type="checkbox"]');
             checkbox.checked = !checkbox.checked;
             label.classList.toggle('selected', checkbox.checked);
             updateSummaryExtras();
             updateBookButtonState();
         });
-
-        // Inicializar estado si ya está seleccionado
         if (label.querySelector('input[type="checkbox"]').checked) {
             label.classList.add('selected');
         }
     });
 
     // --- CLIENTE ---
-
     const clientNameInput = document.getElementById('client-name');
     const clientPhoneInput = document.getElementById('client-phone');
-
     [clientNameInput, clientPhoneInput].forEach(input => {
         input.addEventListener('input', () => {
             const nameVal = clientNameInput.value.trim();
@@ -524,14 +480,11 @@ document.addEventListener('DOMContentLoaded', () => {
             updateBookButtonState();
         });
     });
-
     clientForm.addEventListener('submit', async (e) => {
         e.preventDefault();
-
         saveClientBtn.disabled = true;
         saveClientBtn.textContent = 'Guardando...';
         clientSaveMsg.textContent = '';
-
         const payload = {
             name: clientForm.name.value.trim(),
             email: clientForm.email.value.trim(),
@@ -539,7 +492,6 @@ document.addEventListener('DOMContentLoaded', () => {
             address: clientForm.address.value.trim(),
             _token: '{{ csrf_token() }}',
         };
-
         if (!payload.name || !payload.email || !payload.phone_number || !payload.address) {
             clientSaveMsg.classList.add('text-red-600');
             clientSaveMsg.textContent = 'Please complete all fields.';
@@ -547,7 +499,6 @@ document.addEventListener('DOMContentLoaded', () => {
             saveClientBtn.textContent = 'Save Information';
             return;
         }
-
         try {
             const response = await fetch("{{ route('public.customer.store') }}", {
                 method: 'POST',
@@ -558,20 +509,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 },
                 body: JSON.stringify(payload)
             });
-
             if (!response.ok) throw new Error('Error en la respuesta del servidor.');
-
             const result = await response.json();
-
             if (result.success) {
                 clientSaveMsg.style.color = 'green';
                 clientSaveMsg.textContent = 'Information saved successfully.';
-
                 hiddenCustomerId.value = result.customer.id;
                 summaryCustomer.textContent = `${result.customer.name} - ${result.customer.phone_number}`;
-
                 updateBookButtonState();
-
             } else {
                 clientSaveMsg.classList.add('text-red-600');
                 clientSaveMsg.textContent = 'Error: ' + (result.message || 'Could not save information.');
@@ -586,152 +531,110 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // --- CALENDARIO MEJORADO ---
-
-    // Horas que mostramos en eje Y (de 7am a 6pm)
+    // Horas que mostramos en eje Y (de 8am a 5pm)
     const availableHours = [];
-    for(let h = 7; h <= 18; h++) {
-        // Formato 24h con dos dígitos
+    for (let h = 8; h <= 17; h++) {
         availableHours.push(h.toString().padStart(2, '0') + ':00');
     }
-
     // Días (columnas) - desde hoy, rango 7 días
     function getNextDays(daysCount = 7) {
         const days = [];
         const today = new Date();
-        for(let i=0; i<daysCount; i++) {
+        for (let i = 0; i < daysCount; i++) {
             const d = new Date(today);
             d.setDate(today.getDate() + i);
             days.push(d);
         }
         return days;
     }
-
-    // Formatear fecha para mostrar en encabezado y para valor YYYY-MM-DD
-    function formatDateDisplay(date) {
-        return date.toLocaleDateString('en-US', { weekday: 'short', day: 'numeric', month: 'short' }); // ex: Wed, 21 May
-    }
-
-    function formatDateValue(date) {
-        return date.toISOString().split('T')[0];
-    }
-
-    // Ver si una celda (día+hora) está bloqueada
-    function isBlocked(dateStr, hourStr) {
-        // Bloquea si en blockedAppointmentsRaw está ese día y hora
-        const blocked = blockedAppointmentsRaw.some(ba => ba.date === dateStr && ba.hour === hourStr);
-        if(blocked) return true;
-
-        // Bloquear antes de la hora actual también
-        const now = new Date();
-        const cellDateTime = new Date(dateStr + 'T' + hourStr + ':00');
-        // Si la fecha/hora es menor o igual que la hora actual, bloquear
-        if(cellDateTime <= now) return true;
-
-        return false;
-    }
-
-    // Convertir 24h "HH:MM" a 12h AM/PM
-    function to12Hour(time24) {
-        const [hour, minute] = time24.split(':').map(Number);
-        const ampm = hour >= 12 ? 'PM' : 'AM';
-        let hour12 = hour % 12;
-        hour12 = hour12 ? hour12 : 12; // el 0 es 12
-        return `${hour12}:${minute.toString().padStart(2,'0')} ${ampm}`;
-    }
-
-    // Generar encabezado (días) dinámicamente
+    // Formatear fecha de encabezado
     function renderCalendarHeader(days) {
-        // Limpiar encabezados existentes, excepto el primero
         while (calendarTheadRow.children.length > 1) {
             calendarTheadRow.removeChild(calendarTheadRow.lastChild);
         }
-        
-        // El primer th ya está (Hora/Día), ahora añadimos los días
         days.forEach(day => {
             const th = document.createElement('th');
             th.className = 'px-3 py-2 bg-white sticky top-0 z-10 text-gray-600 font-medium border-b';
-            
-            // Formato más detallado para los días como en la imagen
-            const dayName = day.toLocaleDateString('es-ES', { weekday: 'short' });
+            // Prefijo en inglés
+            const dayName = day.toLocaleDateString('en-US', { weekday: 'short' });
             const dayNumber = day.getDate();
-            
             const daySpan = document.createElement('div');
             daySpan.className = 'text-sm';
             daySpan.textContent = dayName;
-            
             const dateSpan = document.createElement('div');
             dateSpan.className = 'text-base';
             dateSpan.textContent = dayNumber;
-            
             th.appendChild(daySpan);
             th.appendChild(dateSpan);
-            
             calendarTheadRow.appendChild(th);
         });
     }
-
-    // Renderizar cuerpo con horas en filas y días en columnas
+    // Construir cuerpo del calendario
     function renderCalendarBody(days, hours) {
         calendarBody.innerHTML = '';
-
         hours.forEach(hour => {
             const tr = document.createElement('tr');
-
-            // Primera columna: hora en formato 12h
             const tdHour = document.createElement('td');
             tdHour.className = 'px-3 py-2 bg-gray-50 sticky left-0 z-10 whitespace-nowrap font-medium text-gray-600 text-sm border-r';
             tdHour.textContent = to12Hour(hour);
             tr.appendChild(tdHour);
-
             days.forEach(day => {
-                const td = document.createElement('td');
-                td.className = 'px-2 py-1';
-
                 const dateStr = formatDateValue(day);
                 const hourStr = hour;
-
+                const td = document.createElement('td');
+                td.className = 'px-2 py-1';
                 const btn = document.createElement('button');
                 btn.type = 'button';
                 btn.className = 'calendar-btn w-full rounded py-2 px-3 text-center';
                 btn.textContent = to12Hour(hourStr);
-
                 const blocked = isBlocked(dateStr, hourStr);
                 btn.disabled = blocked;
-
-                if(blocked) {
+                if (blocked) {
                     btn.classList.add('bg-gray-100', 'text-gray-400', 'cursor-not-allowed', 'opacity-50');
                 } else {
                     btn.classList.add('bg-white', 'text-gray-700', 'hover:bg-blue-50', 'border', 'border-gray-200');
                     btn.addEventListener('click', () => {
-                        // Deseleccionar otros botones
                         document.querySelectorAll('.calendar-btn.selected').forEach(b => b.classList.remove('selected'));
-
                         btn.classList.add('selected');
-
                         appointmentDateInput.value = dateStr;
                         appointmentTimeInput.value = hourStr;
-
                         summaryDatetime.textContent = `${formatDateDisplay(day)} ${to12Hour(hour)}`;
-
                         updateBookButtonState();
                     });
                 }
-
                 td.appendChild(btn);
                 tr.appendChild(td);
             });
-
             calendarBody.appendChild(tr);
         });
     }
-
-    // Renderizar calendario mejorado
+    // Funciones auxiliares
+    function isBlocked(dateStr, hourStr) {
+        const blocked = blockedAppointmentsRaw.some(ba => ba.date === dateStr && ba.hour === hourStr);
+        if (blocked) return true;
+        const now = new Date();
+        const cellDateTime = new Date(dateStr + 'T' + hourStr + ':00');
+        return cellDateTime <= now;
+    }
+    function to12Hour(time24) {
+        const [hour, minute] = time24.split(':').map(Number);
+        const ampm = hour >= 12 ? 'PM' : 'AM';
+        let hour12 = hour % 12;
+        hour12 = hour12 ? hour12 : 12;
+        return `${hour12}:${minute.toString().padStart(2,'0')} ${ampm}`;
+    }
+    function formatDateValue(date) {
+        return date.toISOString().split('T')[0];
+    }
+    function formatDateDisplay(date) {
+        return date.toLocaleDateString('en-US', { weekday: 'short', day: 'numeric', month: 'short' });
+    }
+    // Render inicial
     const days = getNextDays(7);
     renderCalendarHeader(days);
     renderCalendarBody(days, availableHours);
 
     // --- MODAL PARA CONFIRMAR CITA ---
-
     function openModal() {
         modalErrorMsg.textContent = '';
         modalSummary.innerHTML = `
@@ -744,27 +647,16 @@ document.addEventListener('DOMContentLoaded', () => {
         `;
         bookingModal.classList.remove('hidden');
     }
-
     function closeModal() {
         bookingModal.classList.add('hidden');
     }
-
-    bookBtn.addEventListener('click', () => {
-        openModal();
-    });
-
-    modalCloseBtn.addEventListener('click', () => {
-        closeModal();
-    });
-    modalXBtn.addEventListener('click', () => {
-        closeModal();
-    });
-
+    bookBtn.addEventListener('click', openModal);
+    modalCloseBtn.addEventListener('click', closeModal);
+    modalXBtn.addEventListener('click', closeModal);
     modalConfirmBtn.addEventListener('click', async () => {
         modalErrorMsg.textContent = '';
         modalConfirmBtn.disabled = true;
         modalConfirmBtn.textContent = 'Saving...';
-
         const customerId = hiddenCustomerId.value;
         const appointmentDate = appointmentDateInput.value;
         const appointmentTime = appointmentTimeInput.value;
@@ -772,20 +664,17 @@ document.addEventListener('DOMContentLoaded', () => {
         const serviceVehiclePriceId = vehiclePriceRadio ? vehiclePriceRadio.value : null;
         const extrasChecked = [...document.querySelectorAll('#extra-services input[type="checkbox"]:checked')].map(i => i.value);
         const totalPrice = parseFloat(summaryTotal.textContent) || 0;
-
         let errors = [];
         if (!customerId) errors.push('You must save your information first.');
         if (!serviceVehiclePriceId) errors.push('Select a vehicle.');
         if (!appointmentDate || !appointmentTime) errors.push('Select date and time.');
         if (totalPrice <= 0) errors.push('Invalid total.');
-
-        if (errors.length > 0) {
+        if (errors.length) {
             modalErrorMsg.textContent = errors.join(' ');
             modalConfirmBtn.disabled = false;
             modalConfirmBtn.textContent = 'Confirm Appointment';
             return;
         }
-
         const payload = {
             customer_id: customerId,
             appointment_date: appointmentDate,
@@ -795,7 +684,6 @@ document.addEventListener('DOMContentLoaded', () => {
             total_price: totalPrice,
             _token: '{{ csrf_token() }}'
         };
-
         try {
             const response = await fetch("{{ route('public.book.store') }}", {
                 method: 'POST',
@@ -806,7 +694,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 },
                 body: JSON.stringify(payload)
             });
-
             if (!response.ok) {
                 let errorMessage = 'Error scheduling the appointment.';
                 try {
@@ -815,9 +702,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 } catch (_) {}
                 throw new Error(errorMessage);
             }
-
             const result = await response.json();
-
             if (result.success) {
                 closeModal();
                 alert('Appointment scheduled successfully! ID: ' + result.appointment_id);

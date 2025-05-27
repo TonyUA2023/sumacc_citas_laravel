@@ -43,7 +43,7 @@ class ServiceController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
-            'recommended_frequency' => 'nullable|integer',
+            'recommended_frequency' => 'nullable|string',
             'tagline' => 'nullable|string|max:255',
             'base_duration_minutes' => 'nullable|integer',
             'category_id' => 'required|exists:service_categories,id',
@@ -133,7 +133,7 @@ class ServiceController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
-            'recommended_frequency' => 'nullable|integer',
+            'recommended_frequency' => 'nullable|string',
             'tagline' => 'nullable|string|max:255',
             'base_duration_minutes' => 'nullable|integer',
             'category_id' => 'required|exists:service_categories,id',

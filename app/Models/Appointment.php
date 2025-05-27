@@ -8,7 +8,7 @@ class Appointment extends Model
 {
     protected $fillable = [
         'customer_id', 'appointment_date', 'status', 'total_price',
-        'service_vehicle_price_id', 'admin_user_id'
+        'service_vehicle_price_id', 'admin_user_id', 'notes',
     ];
 
     protected $dates = ['appointment_date'];

@@ -31,27 +31,42 @@ class AppointmentController extends Controller
         return view('admin.appointments.index', compact('customers', 'serviceVehiclePrices', 'appointments'));
     }
 
-    public function events()
-    {
-        $appointments = Appointment::with(['customer', 'serviceVehiclePrice.service', 'serviceVehiclePrice.vehicleType'])->get();
+public function events()
+{
+    $appointments = Appointment::with([
+        'customer',
+        'serviceVehiclePrice.service',
+        'serviceVehiclePrice.vehicleType',
+        'appointmentExtras.aLaCarteService'
+    ])->get();
 
-        $events = $appointments->map(function ($appointment) {
-            return [
-                'id' => $appointment->id,
-                'title' => optional($appointment->serviceVehiclePrice->service)->name ?? 'N/A',
-                'start' => optional($appointment->appointment_date)?->format('Y-m-d\TH:i:s') ?? now()->format('Y-m-d\TH:i:s'),
-                'end' => optional($appointment->appointment_date)?->addHour()->format('Y-m-d\TH:i:s') ?? now()->addHour()->format('Y-m-d\TH:i:s'),
-                'extendedProps' => [
-                    'customer_name' => optional($appointment->customer)->name ?? 'N/A',
-                    'vehicle' => optional($appointment->serviceVehiclePrice->vehicleType)->name ?? 'N/A',
-                    'total_price' => (float) ($appointment->total_price ?? 0),
-                    'status' => $appointment->status ?? 'pendiente',
-                ],
-            ];
-        });
+    $events = $appointments->map(function ($appointment) {
+        $customer = $appointment->customer;
+        return [
+            'id'    => $appointment->id,
+            'title' => optional($appointment->serviceVehiclePrice->service)->name ?? 'N/A',
+            'start' => optional($appointment->appointment_date)?->format('Y-m-d\TH:i:s') ?? now()->format('Y-m-d\TH:i:s'),
+            'end'   => optional($appointment->appointment_date)?->addHour()->format('Y-m-d\TH:i:s') ?? now()->addHour()->format('Y-m-d\TH:i:s'),
+            'extendedProps' => [
+                'customer_name'    => $customer->name ?? 'N/A',
+                'customer_address' => $customer->address ?? '—',
+                'customer_phone'   => $customer->phone_number  ?? '—',
+                'customer_email'   => $customer->email  ?? '—',
+                'vehicle'          => optional($appointment->serviceVehiclePrice->vehicleType)->name ?? 'N/A',
+                'total_price'      => (float) ($appointment->total_price ?? 0),
+                'status'           => $appointment->status ?? 'pendiente',
+                'extras'           => $appointment->appointmentExtras->map(function($extra) {
+                    return [
+                        'name'     => optional($extra->aLaCarteService)->name ?? 'Extra',
+                        'quantity' => $extra->quantity
+                    ];
+                })->toArray(),
+            ],
+        ];
+    });
 
-        return response()->json($events);
-    }
+    return response()->json($events);
+}
 
 
     /**

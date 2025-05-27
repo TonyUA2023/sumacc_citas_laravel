@@ -1,168 +1,305 @@
+{{-- resources/views/public/car-wash.blade.php --}}
 @extends('public.layout')
 
 @section('content')
 
-{{-- Hero --}}
-<section class="hero">
+<div class="overflow-x-hidden overflow-y-hidden">
 
-    @php
-    $bgImage = asset('services/exterior-cleaning/bmw-1.png');
-    @endphp
-
-    <div class="hero-image" style="background-image: url('{{ $bgImage }}');">
-        <div class="hero-content px-4 sm:px-6 lg:px-8 text-center">
-          <h1 class="text-3xl sm:text-4xl font-bold text-white leading-tight">Premium Car Wash</h1>
-          <p class="text-base sm:text-lg text-white mt-2 max-w-xl mx-auto">We bring the shine to your driveway!</p>
-        </div>
-    </div>
-    <div class="hero-white flex items-center justify-center bg-white py-10 px-4 sm:px-6 lg:px-8">
-        <div class="hero-text max-w-3xl text-center">
-          <h2 class="text-2xl sm:text-3xl font-bold text-gray-900 mb-4">Give your car a fresh</h2>
-          <p class="text-base sm:text-lg text-gray-700">
-            Clean look with Wayra Auto Detailing's top-quality car wash services. Our team will make sure your vehicle is spotless and shining, inside and out.
-          </p>
-        </div>
-    </div>
-</section>
-
-<style>
-.hero {
-  display: flex;
-  flex-direction: column;
-  height: 85vh;
-  min-height: 500px;
-  max-height: 800px;
-  width: 100%;
-}
-
-.hero-image {
-  height: 45vh;
-  min-height: 250px;
-  background-size: cover;
-  background-position: center;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: white;
-  text-align: center;
-}
-
-.hero-content h1,
-.hero-content p {
-  text-shadow: 0 0 8px rgba(0,0,0,0.7);
-}
-
-.hero-white {
-  height: 40vh;
-  min-height: 220px;
-}
-
-.hero-text h2,
-.hero-text p {
-  margin: 0 auto;
-}
-
-/* Responsive typography */
-@media (max-width: 768px) {
-  .hero-content h1 {
-    font-size: 1.875rem; /* 30px */
-  }
-  .hero-content p {
-    font-size: 1rem;
-  }
-  .hero-text h2 {
-    font-size: 1.5rem;
-  }
-  .hero-text p {
-    font-size: 1rem;
-  }
-}
-</style>
-
-{{-- Sección de introducción con botón --}}
-<section class="bg-gray-900 text-white py-16 px-4 sm:px-6 lg:px-8 text-center">
-  <div class="container max-w-4xl mx-auto">
-    <h1 class="text-3xl sm:text-4xl font-bold">Wayra Deep Down Detail</h1>
-    <p class="text-base sm:text-lg mt-4">Premium Auto Detailing Services</p>
-    <a href="{{ url('/contactform') }}" class="mt-6 inline-block bg-red-500 hover:bg-red-600 text-white py-2 px-6 rounded-full text-base sm:text-lg">Book Now</a>
-  </div>
-</section>
-
-{{-- Servicios dinámicos filtrados por categoría SUPER WASH (id=1) --}}
-<section id="services" class="py-16 bg-white text-gray-800 px-4 sm:px-6 lg:px-8">
-  <div class="container max-w-7xl mx-auto space-y-16">
-
-    @php
+  @php
+      // Imágenes para el carrusel del Hero
+      $heroImages = [
+        asset('carros/wash2.jpg'),
+          asset('carros/wash1.jpg'),
+          asset('carros/wash3.jpg'),
+          asset('carros/wash4.jpg'),
+          asset('carros/wash5.jpg'),
+          asset('carros/wash6.jpg'),
+          asset('carros/wash7.jpg'),
+      ];
       $superWashCategory = $categories->firstWhere('id', 1);
-    @endphp
+      $firstServiceId = optional($superWashCategory->services->first())->id;
+  @endphp
 
-    @if ($superWashCategory && $superWashCategory->services->count())
-      <h2 class="text-3xl sm:text-4xl font-bold mb-8 text-center text-red-600">{{ $superWashCategory->category_name }}</h2>
+  {{-- Hero Section Dark con Carrusel --}}
+  <section
+    class="relative w-full h-screen bg-black overflow-hidden"
+    data-aos="fade"
+    data-aos-duration="1000"
+  >
+    {{-- Swiper Container --}}
+    <div class="swiper hero-swiper absolute inset-0">
+      <div class="swiper-wrapper">
+        @foreach($heroImages as $img)
+          <div class="swiper-slide">
+            <div
+              class="absolute inset-0 bg-cover bg-center filter brightness-50"
+              style="background-image: url('{{ $img }}'); transform: scale(1.05);"
+            ></div>
+          </div>
+        @endforeach
+      </div>
 
-      @foreach ($superWashCategory->services->sortBy('id') as $index => $service)
-        @php
-          $reverse = $index % 2 === 0;
-        @endphp
+      {{-- Progress Bar Pagination --}}
+      <div class="swiper-pagination swiper-pagination-progressbar !bottom-10"></div>
+    </div>
 
-        <section class="bg-white text-gray-800">
-          <div class="container max-w-7xl mx-auto px-4 sm:px-6">
-            <div class="flex flex-col lg:flex-row {{ $reverse ? 'lg:flex-row-reverse' : '' }} gap-6 lg:gap-8 items-start">
-              <!-- Detalles del Servicio -->
-              <div class="bg-gray-50 p-6 shadow-lg rounded-md lg:w-1/2">
-                <h2 class="text-2xl sm:text-3xl font-bold mb-2 text-red-600">{{ $service->name }}</h2>
-                <p class="text-base sm:text-lg font-semibold mb-2">{{ $service->tagline ?? 'Duration and price info not available' }}</p>
+    {{-- Dark Gradient Overlay --}}
+    <div class="absolute inset-0 bg-gradient-to-b from-black/90 via-black/70 to-black/90"></div>
+    {{-- Semi-Opaque Black Layer --}}
+    <div class="absolute inset-0 bg-black/50"></div>
 
-                @if ($service->exterior_description)
-                  <div class="mb-4">
-                    <p class="font-bold">Exterior Cleaning:</p>
-                    <p class="text-sm sm:text-base leading-relaxed text-gray-700">{{ $service->exterior_description }}</p>
-                  </div>
-                @endif
+    {{-- Hero Content --}}
+    <div class="relative z-10 flex flex-col items-center justify-center h-full text-center px-6">
+      <h1
+        class="text-5xl md:text-7xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-red-500 drop-shadow-lg"
+        data-aos="fade-up"
+        data-aos-delay="200"
+      >
+        PREMIUM HAND SUPER WASH
+      </h1>
+      <p
+        class="mt-4 text-lg md:text-2xl text-gray-300 max-w-2xl"
+        data-aos="fade-up"
+        data-aos-delay="400"
+      >
+        We bring the shine to your driveway with a touch of elegance and precision.
+      </p>
+    </div>
+  </section>
 
-                @if ($service->interior_description)
-                  <div class="mb-4">
-                    <p class="font-bold">Interior Cleaning:</p>
-                    <p class="text-sm sm:text-base leading-relaxed text-gray-700">{{ $service->interior_description }}</p>
-                  </div>
-                @endif
+    {{-- Premium Brands Showcase --}}
+  <section class="relative bg-gradient-to-b from-black via-gray-950 to-black py-20 overflow-hidden">
+    <div class="absolute inset-0 bg-blue-900/5"></div>
 
-                <a href="{{ route('public.book', $service->id) }}" class="mt-4 inline-block bg-black text-white py-2 px-4 rounded-md hover:bg-gray-700 text-base sm:text-lg">
-                  Schedule Now
-                </a>
+    <div class="relative" data-aos="fade">
+      <h4 class="text-center text-2xl font-light text-gray-500 mb-12 tracking-widest uppercase">Trusted by Premium Brands</h4>
+
+      <div class="relative flex overflow-hidden">
+        <div class="flex animate-infinite-scroll whitespace-nowrap">
+          @php
+          $brands = [
+          'audi.png', 'bmw.png', 'corvet.png', 'ferrrari.png', 'ford.png',
+          'lambo.png', 'maseratti.png', 'mercedes.png', 'tesla.png',
+          'toyota.png', 'volkswagen.png'
+          ];
+          $allBrands = array_merge($brands, $brands, $brands); // triplicado para efecto continuo
+          @endphp
+
+          @foreach($allBrands as $logo)
+          <div class="flex-shrink-0 mx-8">
+            <img
+              src="{{ asset('brands/' . $logo) }}"
+              alt="{{ pathinfo($logo, PATHINFO_FILENAME) }}"
+              class="h-20 md:h-24 object-contain filter brightness-50 hover:brightness-100 transition-all duration-500 transform hover:scale-110" />
+          </div>
+          @endforeach
+        </div>
+      </div>
+    </div>
+  </section>
+
+  {{-- Servicios Super Wash en Dark Mode --}}
+  <section
+    id="services"
+    class="py-16 bg-gray-900 text-gray-200 px-6 lg:px-16 overflow-x-hidden overflow-y-hidden"
+  >
+    <div class="container mx-auto space-y-12">
+      @if($superWashCategory && $superWashCategory->services->count())
+        <h2 class="text-3xl font-bold text-center text-red-400" data-aos="fade-up">
+          {{ $superWashCategory->category_name }}
+        </h2>
+        @foreach($superWashCategory->services->sortBy('id') as $index => $service)
+          @php $reverse = $index % 2 === 0; @endphp
+          <div
+            class="flex flex-col lg:flex-row {{ $reverse ? 'lg:flex-row-reverse' : '' }} gap-8 items-stretch"
+            data-aos="fade-up"
+            data-aos-delay="{{ $index * 100 }}"
+          >
+            {{-- Detalles Servicio --}}
+            <div class="bg-gray-800 p-6 rounded-2xl shadow-lg lg:w-1/2">
+              <h3 class="text-2xl font-bold text-red-400 mb-2">{{ $service->name }}</h3>
+              <p class="italic mb-4">{{ $service->tagline }}</p>
+                         @if($service->description)
+              <p class="mb-2">{{ $service->description }}</p>
+            @endif
+
+            @if($service->recommended_frequency)
+            <p class="mb-4">Recommendation: {{ $service->recommended_frequency }}</p>
+            @endif
+            @if($service->exterior_description)
+              <div class="mb-3">
+                <p class="font-semibold">Exterior Cleaning:</p>
+                <p class="text-gray-400">{{ $service->exterior_description }}</p>
               </div>
+            @endif
 
-              <!-- Tabla de Precios -->
-              <div class="bg-white p-4 shadow-md rounded-md lg:w-1/2 overflow-x-auto">
-                <h3 class="text-xl sm:text-2xl font-semibold mb-4">Vehicle Pricing</h3>
-                <table class="min-w-full table-auto border-collapse border border-gray-300 text-sm sm:text-base">
-                  <thead>
-                    <tr class="bg-gray-200">
-                      <th class="border border-gray-300 text-left px-3 py-2">Vehicle Type</th>
-                      <th class="border border-gray-300 text-right px-3 py-2">Price</th>
+            @if($service->interior_description)
+              <div class="mb-3">
+                <p class="font-semibold">Interior Cleaning:</p>
+                <p class="text-gray-400">{{ $service->interior_description }}</p>
+              </div>
+            @endif
+
+              <a
+                href="{{ route('booking.service', ['service' => $service->id]) }}"
+                class="mt-4 inline-block bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-6 rounded-full transition"
+              >
+                Schedule Now
+              </a>
+            </div>
+
+            {{-- Tabla Precios --}}
+            <div class="bg-gray-800 p-4 rounded-2xl shadow-inner overflow-x-auto lg:w-1/2">
+              <h4 class="text-xl font-semibold mb-3">Vehicle Pricing</h4>
+              <table class="min-w-full table-auto text-sm">
+                <thead>
+                  <tr class="bg-gray-700">
+                    <th class="px-4 py-2 text-left">Vehicle Type</th>
+                    <th class="px-4 py-2 text-right">{{ $service->price_label }}</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  @foreach($service->serviceVehiclePrices->sortBy('vehicleType.id') as $price)
+                    <tr class="{{ $loop->even ? 'bg-gray-800' : '' }}">
+                      <td class="px-4 py-2">{{ $price->vehicleType->name }}</td>
+                      <td class="px-4 py-2 text-right text-green-400">
+                        ${{ number_format($price->price, 2) }}
+                      </td>
                     </tr>
-                  </thead>
-                  <tbody>
-                    @foreach ($service->serviceVehiclePrices->sortBy(function($price) {
-                        return $price->vehicleType->id ?? 0;
-                    }) as $price)
-                      <tr class="{{ $loop->even ? 'bg-gray-100' : 'bg-white' }}">
-                        <td class="border border-gray-300 px-3 py-2">{{ $price->vehicleType->name ?? 'N/A' }}</td>
-                        <td class="border border-gray-300 text-right px-3 py-2">${{ number_format($price->price, 2) }}</td>
-                      </tr>
-                    @endforeach
-                  </tbody>
-                </table>
-              </div>
+                  @endforeach
+                </tbody>
+              </table>
             </div>
           </div>
-        </section>
-      @endforeach
+        @endforeach
+      @else
+        <p class="text-center text-gray-400">No Car Wash services available.</p>
+      @endif
+    </div>
+  </section>
 
-    @else
-      <p class="text-center text-base sm:text-lg">No Car Wash services available at the moment.</p>
-    @endif
+  {{-- A La Carte Extras --}}
+  <section
+    id="a-la-carte"
+    class="py-16 bg-gray-800 text-gray-200 px-6 lg:px-20 overflow-x-hidden overflow-y-hidden"
+  >
+    <div class="text-center mb-8" data-aos="fade-up">
+      <h2 class="text-3xl font-bold text-red-400">A La Carte Services</h2>
+      <p class="mt-2 text-gray-400">Add these extras to any wash</p>
+    </div>
+    <div class="overflow-x-auto" data-aos="fade-up" data-aos-delay="200">
+      <table class="min-w-full table-auto text-sm">
+        <thead>
+          <tr class="bg-gray-700">
+            <th class="px-4 py-2 text-left">Service</th>
+            <th class="px-4 py-2 text-right">Price</th>
+          </tr>
+        </thead>
+        <tbody>
+          @foreach($aLaCarteServices as $extra)
+            <tr class="{{ $loop->even ? 'bg-gray-800' : '' }}">
+              <td class="px-4 py-2">{{ $extra->name }}</td>
+              <td class="px-4 py-2 text-right">
+                {{ is_null($extra->price) ? 'Inquire' : '$'.number_format($extra->price, 2) }}
+              </td>
+            </tr>
+          @endforeach
+        </tbody>
+      </table>
+    </div>
+  </section>
 
+<section
+  id="gallery"
+  class="py-16 bg-gray-900 text-gray-200 px-6 lg:px-16 overflow-hidden"
+  data-aos="fade-up"
+>
+  <!-- Título -->
+  <h2 class="text-3xl font-bold text-center mb-12 text-red-400">Gallery & Video</h2>
+
+  <!-- Galería de imágenes -->
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+    @foreach (range(1, 11) as $i)
+      <div class="h-96 bg-cover bg-center rounded-lg shadow-lg" style="background-image:url('{{ asset("carros/wash{$i}.jpg") }}')"></div>
+    @endforeach
+  </div>
+
+  <!-- Galería de videos responsiva -->
+  <div class="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
+    @foreach (range(5, 9) as $v)
+      <div class="aspect-w-16 aspect-h-9">
+        <video
+          class="w-full h-[35rem] rounded-lg object-cover shadow-lg"
+          src="{{ asset("carros/VID{$v}.mp4") }}"
+          autoplay
+          muted
+          loop
+          controls
+          playsinline
+        ></video>
+      </div>
+    @endforeach
   </div>
 </section>
+</div> {{-- cierre overflow wrapper --}}
 
+<style>
+  .hero-swiper .swiper-slide > div {
+    transition: transform 10s ease-out;
+  }
+  .swiper-pagination-bullet-active {
+    background: #ff4d4d;
+  }
+
+  /* Progressbar Container */
+  .swiper-pagination-progressbar {
+    position: absolute;
+    bottom: 10px !important;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: rgba(255, 255, 255, 0.2);
+    z-index: 10;
+  }
+
+  /* Progressbar Fill */
+  .swiper-pagination-progressbar-fill {
+    background: #ff4d4d;
+    width: 0%;
+    height: 100%;
+    transition: width 0.3s ease;
+  }
+
+    @keyframes infinite-scroll {
+    0% {
+      transform: translateX(0);
+    }
+
+    100% {
+      transform: translateX(-33.333%);
+    }
+
+    /* Ajusta este valor según el contenido */
+  }
+
+  .animate-infinite-scroll {
+    animation: infinite-scroll 40s linear infinite;
+  }
+</style>
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    new Swiper('.hero-swiper', {
+      loop: true,
+      autoplay: { delay: 2000, disableOnInteraction: false },
+      effect: 'fade',
+      fadeEffect: { crossFade: true },
+      speed: 1000,
+      pagination: {
+        el: '.swiper-pagination',
+        type: 'progressbar'
+      },
+    });
+    AOS.init({ duration: 800, once: true });
+  });
+</script>
 @endsection

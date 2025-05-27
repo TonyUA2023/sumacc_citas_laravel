@@ -16,13 +16,13 @@
       <!-- Cuadro de texto sobre el mapa -->
       <div class="absolute top-28 left-5 bg-white bg-opacity-80 p-4 rounded shadow-lg">
         <h4 class="text-lg font-bold text-black">Hours of Operation</h4>
-        <p class="text-black">Monday: 6.00 am - 8.00pm</p>
-        <p class="text-black">Tuesday: 6.00 am - 8.00pm</p>
-        <p class="text-black">Wednesday: 6.00 am - 8.00pm</p>
-        <p class="text-black">Thursday: 6.00 am - 8.00pm</p>
-        <p class="text-black">Friday: 6.00 am - 8.00pm</p>
-        <p class="text-black">Saturday: 6.00 am - 8.00pm</p>
-        <p class="text-black">Sunday: 7.00 am - 5.00pm</p>
+        <p class="text-black">Monday: 8.00 am - 5.00pm</p>
+        <p class="text-black">Tuesday: 8.00 am - 5.00pm</p>
+        <p class="text-black">Wednesday: 8.00 am - 5.00pm</p>
+        <p class="text-black">Thursday: 8.00 am - 5.00pm</p>
+        <p class="text-black">Friday: 8.00 am - 5.00pm</p>
+        <p class="text-black">Saturday: 8.00 am - 5.00pm</p>
+        <p class="text-black">Sunday: 8.00 am - 5.00pm</p>
       </div>
     </div>
 
