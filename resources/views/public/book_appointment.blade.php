@@ -15,7 +15,7 @@
 
         {{-- Selected service --}}
         <section class="p-4 border rounded ">
-            <h2 class="text-xl sm:text-2xl font-bold mb-2">Selected Service</h2>
+            <h2 class="text-xl sm:text-2xl font-bold mb-2">Selected ServicqweqweWe</h2>
             <p class="font-semibold text-base sm:text-lg">{{ $service->name }}</p>
             <p class="text-sm sm:text-base">{{ $service->tagline }}</p>
             <p class="text-sm sm:text-base">{{ $service->exterior_description }}</p>
