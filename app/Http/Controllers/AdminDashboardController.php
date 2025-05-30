@@ -64,6 +64,8 @@ class AdminDashboardController extends Controller
             return [$month => $monthlyRevenue->get($month, 0)];
         });
 
+        
+
         // Citas por día de la semana (para identificar qué días tienen más citas)
         $appointmentsByDayOfWeek = Appointment::select(
                 DB::raw("EXTRACT(DOW FROM appointment_date) as day_of_week"),
