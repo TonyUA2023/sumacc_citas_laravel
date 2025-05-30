@@ -4,6 +4,13 @@
 
 @section('content')
 
+{{-- ✅ Incluir Alpine.js si aún no está en tu layout --}}
+<script src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+
+<style>
+    [x-cloak] { display: none !important; }
+</style>
+
 <div x-data="categoryManager()" class="space-y-6">
 
     <h1 class="text-2xl font-bold mb-6">Categorías de Servicios</h1>
@@ -44,7 +51,7 @@
     <div
         x-show="createModalOpen"
         x-transition
-        style="display: none"
+        x-cloak
         class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50"
     >
         <div @click.away="closeCreateModal()" class="bg-white rounded p-6 w-full max-w-md shadow-lg">
@@ -72,7 +79,7 @@
     <div
         x-show="editModalOpen"
         x-transition
-        style="display: none"
+        x-cloak
         class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50"
     >
         <div @click.away="closeEditModal()" class="bg-white rounded p-6 w-full max-w-md shadow-lg">

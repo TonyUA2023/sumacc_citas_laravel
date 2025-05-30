@@ -69,19 +69,19 @@
             </div>
             <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 w-full lg:w-auto">
                 <div class="bg-gradient-to-br from-orange-50 to-orange-100 p-4 rounded-lg border-l-4 border-orange-500">
-                    <div class="text-2xl font-bold text-orange-700">{{ $appointments->where('status','pendiente')->count() }}</div>
+                    <div class="text-2xl font-bold text-orange-700">{{ $appointments->where('status','Pendiente')->count() }}</div>
                     <div class="text-sm text-orange-600">Pendientes</div>
                 </div>
                 <div class="bg-gradient-to-br from-blue-50 to-blue-100 p-4 rounded-lg border-l-4 border-blue-500">
-                    <div class="text-2xl font-bold text-blue-700">{{ $appointments->where('status','aceptado')->count() }}</div>
+                    <div class="text-2xl font-bold text-blue-700">{{ $appointments->where('status','Aceptado')->count() }}</div>
                     <div class="text-sm text-blue-600">Aceptadas</div>
                 </div>
                 <div class="bg-gradient-to-br from-green-50 to-green-100 p-4 rounded-lg border-l-4 border-green-500">
-                    <div class="text-2xl font-bold text-green-700">{{ $appointments->where('status','realizado')->count() }}</div>
+                    <div class="text-2xl font-bold text-green-700">{{ $appointments->where('status','Realizado')->count() }}</div>
                     <div class="text-sm text-green-600">Realizadas</div>
                 </div>
                 <div class="bg-gradient-to-br from-red-50 to-red-100 p-4 rounded-lg border-l-4 border-red-500">
-                    <div class="text-2xl font-bold text-red-700">{{ $appointments->where('status','rechazado')->count() }}</div>
+                    <div class="text-2xl font-bold text-red-700">{{ $appointments->where('status','Rechazado')->count() }}</div>
                     <div class="text-sm text-red-600">Rechazadas</div>
                 </div>
             </div>
@@ -101,6 +101,51 @@
         </div>
         <div id="calendar" class="rounded-lg overflow-hidden"></div>
     </div>
+
+    <!-- Modal Editar Cita -->
+<div x-show="editAppointmentModalOpen" x-cloak class="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
+    <div class="bg-white rounded-lg shadow-lg p-6 w-full max-w-xl space-y-4">
+        <div class="flex justify-between items-center">
+            <h2 class="text-lg font-bold">Editar Cita #<span x-text="editAppointmentId"></span></h2>
+            <button @click="closeEditAppointmentModal()" class="text-gray-500 hover:text-gray-800">
+                <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                </svg>
+            </button>
+        </div>
+
+        <form :action="`/admin/appointments/${editAppointmentId}`" method="POST">
+            @csrf
+            @method('PUT')
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Fecha y Hora</label>
+                    <input type="datetime-local" name="appointment_date"
+                        x-model="editAppointment.appointment_date"
+                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500"/>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Estado</label>
+                    <select name="status"
+                        x-model="editAppointment.status"
+                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                        <option value="Pendiente">Pendiente</option>
+                        <option value="Aceptado">Aceptado</option>
+                        <option value="Realizado">Realizado</option>
+                        <option value="Rechazado">Rechazado</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="flex justify-end mt-6">
+                <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition">
+                    Guardar Cambios
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
 
     <!-- Lista de Citas -->
     <div class="bg-white rounded-lg shadow-md">
@@ -155,7 +200,7 @@
                         <td class="px-6 py-4 text-sm text-gray-900">
                             <div class="flex items-center"><svg class="h-5 w-5 text-gray-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4"/></svg>{{ $appointment->serviceVehiclePrice->vehicleType->name ?? 'N/A' }}</div>
                         </td>
-                        <td class="px-6 py-4 text-sm font-semibold text-gray-900">S/. {{ number_format($appointment->total_price,2) }}</td>
+                        <td class="px-6 py-4 text-sm font-semibold text-gray-900">$ {{ number_format($appointment->total_price,2) }}</td>
                         <td class="px-6 py-4"><span class="status-badge status-{{ strtolower($appointment->status) }}">{{ ucfirst($appointment->status) }}</span></td>
                         <td class="px-6 py-4 text-sm text-gray-900">
                             <div class="flex flex-col">
@@ -263,7 +308,7 @@
                         <div class="font-semibold text-xs">${e.title}</div>
                         <div class="text-xs opacity-90">${props.customer_name}</div>
                         <div class="text-xs opacity-90">${props.vehicle}</div>
-                        <div class="text-xs font-semibold">S/. ${(+props.total_price||0).toFixed(2)}</div>
+                        <div class="text-xs font-semibold">$ ${(+props.total_price||0).toFixed(2)}</div>
                         ${extrasHtml}
                     </div>
                 `};
@@ -283,32 +328,78 @@
                         </div>
                     `;
                 }
-                modalTitle.textContent=`Cita #${e.id}`;
-                modalBody.innerHTML=`
+                modalTitle.textContent = `Cita #${e.id}`;
+                modalBody.innerHTML = `
                     <div class="space-y-4">
-                      <div><p class="font-semibold text-gray-800">Cliente:</p><p class="text-gray-600">${props.customer_name}</p></div>
-                      <div><p class="font-semibold text-gray-800">Dirección:</p><p class="text-gray-600">${props.customer_address}</p></div>
-                      <div class="grid grid-cols-2 gap-4">
-                        <div><p class="font-semibold text-gray-800">Teléfono:</p><p class="text-gray-600">${props.customer_phone}</p></div>
-                        <div><p class="font-semibold text-gray-800">Correo:</p><p class="text-gray-600">${props.customer_email}</p></div>
-                      </div>
-                      <div><p class="font-semibold text-gray-800">Servicio:</p><p class="text-gray-600">${e.title}</p></div>
-                      <div><p class="font-semibold text-gray-800">Vehículo:</p><p class="text-gray-600">${props.vehicle}</p></div>
-                      ${extrasHtml}
-                      <div><p class="font-semibold text-gray-800">Fecha:</p><p class="text-gray-600">${new Date(e.start).toLocaleDateString('es-PE')} ${new Date(e.start).toLocaleTimeString('es-PE',{hour:'2-digit',minute:'2-digit'})}</p></div>
-                      <div><label for="appointment-status" class="block font-semibold text-gray-800 mb-2">Estado:</label>
-                        <select id="appointment-status" class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500">
-                          <option value="pendiente"${props.status==='pendiente'?' selected':''}>Pendiente</option>
-                          <option value="aceptado"${props.status==='aceptado'?' selected':''}>Aceptado</option>
-                          <option value="realizado"${props.status==='realizado'?' selected':''}>Realizado</option>
-                          <option value="rechazado"${props.status==='rechazado'?' selected':''}>Rechazado</option>
-                        </select>
-                      </div>
-                      <div class="flex justify-end pt-4">
-                        <button id="save-status-btn" class="px-4 py-2 bg-blue-600 text-white rounded-lg">Guardar Cambios</button>
-                      </div>
+                        <div><p class="font-semibold text-gray-800">Cliente:</p><p class="text-gray-600">${props.customer_name}</p></div>
+                        <div><p class="font-semibold text-gray-800">Dirección:</p><p class="text-gray-600">${props.customer_address}</p></div>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div><p class="font-semibold text-gray-800">Teléfono:</p><p class="text-gray-600">${props.customer_phone}</p></div>
+                            <div><p class="font-semibold text-gray-800">Correo:</p><p class="text-gray-600">${props.customer_email}</p></div>
+                        </div>
+                        <div><p class="font-semibold text-gray-800">Servicio:</p><p class="text-gray-600">${e.title}</p></div>
+                        <div><p class="font-semibold text-gray-800">Vehículo:</p><p class="text-gray-600">${props.vehicle}</p></div>
+                        ${extrasHtml}
+                        <div><p class="font-semibold text-gray-800">Fecha:</p><p class="text-gray-600">${new Date(e.start).toLocaleDateString('es-PE')} ${new Date(e.start).toLocaleTimeString('es-PE', {hour:'2-digit',minute:'2-digit'})}</p></div>
+                        <div>
+                            <label for="appointment-status" class="block font-semibold text-gray-800 mb-2">Estado:</label>
+                            <select id="appointment-status" class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500">
+                                <option value="Pendiente"${props.status === 'Pendiente' ? ' selected' : ''}>Pendiente</option>
+                                <option value="Aceptado"${props.status === 'Aceptado' ? ' selected' : ''}>Aceptado</option>
+                                <option value="Realizado"${props.status === 'Realizado' ? ' selected' : ''}>Realizado</option>
+                                <option value="Rechazado"${props.status === 'Rechazado' ? ' selected' : ''}>Rechazado</option>
+                            </select>
+                        </div>
+
+                        <div class="flex flex-col md:flex-row justify-between gap-3 pt-4">
+                            <button id="save-status-btn" class="w-full md:w-auto px-4 py-2 bg-blue-600 text-white rounded-lg">Guardar Cambios</button>
+
+                            <a id="whatsapp-send" target="_blank" class="w-full md:w-auto px-4 py-2 bg-green-600 text-white rounded-lg text-center hover:bg-green-700 transition">Enviar WhatsApp</a>
+
+                            <a id="sms-send" class="w-full md:w-auto px-4 py-2 bg-yellow-500 text-white rounded-lg text-center hover:bg-yellow-600 transition">Enviar SMS</a>
+                        </div>
                     </div>
                 `;
+                                // Enviar WhatsApp y SMS (con código de país de EE.UU. +1)
+const rawPhone = props.customer_phone?.replace(/\D/g, '');
+const intlPhone = rawPhone.startsWith('1') ? `+${rawPhone}` : `+1${rawPhone}`;
+
+const appointmentDate = new Date(e.start);
+const formattedDate = appointmentDate.toLocaleDateString('en-US');
+const formattedTime = appointmentDate.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true }).toLowerCase();
+
+const extras = props.extras?.length
+  ? props.extras.map(x => `- ${x.name} (x${x.quantity})`).join('\n')
+  : null;
+
+const note = props.note ? props.note : 'No additional notes provided.';
+
+const msg = encodeURIComponent(
+`Hello, ${props.customer_name}  
+Appointment Confirmed: ${formattedDate}  
+Time: ${formattedTime}.  
+Vehicle: ${props.vehicle} - ${props.notes} 
+Service: ${e.title}  
+Total Cost: $${(+props.total_price || 0).toFixed(2)}  
+Estimated Time: ${props.estimated_time ?? '2:00hrs.'}  
+Customer Phone: ${props.customer_phone}  
+Work Address: ${props.customer_address}  
+Seattle, WA  
+
+${extras ? `Extra Services:\n${extras}\n` : ''}
+
+Our detailing team will arrive 10 minutes early.  
+If you need to cancel or reschedule your appointment, please do so at least 24 hours in advance.  
+Don't hesitate to contact us:  
+Phone: 425-350-6740  
+Wayra Mobile Detailing`
+);
+
+document.getElementById('whatsapp-send').href = `https://wa.me/${intlPhone.replace('+', '')}?text=${msg}`;
+document.getElementById('sms-send').href = `sms:${intlPhone}?body=${msg}`;
+
+                document.getElementById('whatsapp-send').href = `https://wa.me/${intlPhone.replace('+', '')}?text=${msg}`;
+                document.getElementById('sms-send').href = `sms:${intlPhone}?body=${msg}`;
                 document.getElementById('save-status-btn').onclick = ()=>{
                     fetch(`/admin/appointments/${e.id}/update-status`,{
                         method:'PUT',

@@ -6,15 +6,15 @@
   <meta name="viewport" content="width=device-width" />
 
    <!-- Título dinámico -->
-  <title>{{ $title ?? 'Wayra' }}</title>
+  <title>WAYRA | Luxury Car Detailing in Seattle & Bellevue, WA</title>
 
-  <meta name="description" content="{{ $metaDescription ?? 'Mobile Detailing' }}" />
+  <meta name="description" content="{{ $metaDescription ?? 'At Wayra Mobile Detailing, we provide luxury automotive detailing, taking care of every detail of your vehicle with advanced techniques and premium products.' }}" />
   <meta name="keywords" content="{{ $metaKeywords ?? 'mobile detailing, deep down detail, detail, polishing, car wash, Seattle, Bellevue, Wayra' }}" />
   <meta name="robots" content="index, follow" />
   <link rel="canonical" href="{{ url()->current() }}" />
 
   <meta property="og:title" content="{{ $title ?? 'Wayra' }}" />
-  <meta property="og:description" content="{{ $metaDescription ?? 'Astro description' }}" />
+  <meta property="og:description" content="{{ $metaDescription ?? 'At Wayra Mobile Detailing, we provide luxury automotive detailing, taking care of every detail of your vehicle with advanced techniques and premium products.' }}" />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="{{ url()->current() }}" />
   <meta property="og:image" content="{{ asset('logo/logoHead1.png') }}" />

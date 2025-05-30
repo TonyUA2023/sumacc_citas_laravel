@@ -218,7 +218,7 @@
                                             <thead class="bg-gray-50">
                                                 <tr>
                                                     <th class="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase">Vehículo</th>
-                                                    <th class="px-3 py-2 text-right text-xs font-medium text-gray-500 uppercase">Precio (S/.)</th>
+                                                    <th class="px-3 py-2 text-right text-xs font-medium text-gray-500 uppercase">Precio ($)</th>
                                                     <th class="px-3 py-2 text-center text-xs font-medium text-gray-500 uppercase">Acción</th>
                                                 </tr>
                                             </thead>
@@ -336,7 +336,7 @@
                             class="w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-blue-500 focus:border-blue-500 transition" />
                     </div>
                     <div>
-                        <label for="starting_price" class="block text-sm font-medium text-gray-700 mb-1">Precio Inicial (S/.)</label>
+                        <label for="starting_price" class="block text-sm font-medium text-gray-700 mb-1">Precio Inicial ($)</label>
                         <input type="number" step="0.01" id="starting_price" name="starting_price" min="0"
                             class="w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-blue-500 focus:border-blue-500 transition" />
                     </div>
@@ -344,7 +344,7 @@
                         <label for="price_label" class="block text-sm font-medium text-gray-700 mb-1">Etiqueta de Precio</label>
                         <input type="text" id="price_label" name="price_label"
                             class="w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-blue-500 focus:border-blue-500 transition" />
-                        <p class="mt-1 text-xs text-gray-500">Ej: "Desde S/.99" o "Precios variables"</p>
+                        <p class="mt-1 text-xs text-gray-500">Ej: "Desde $99" o "Precios variables"</p>
                     </div>
                     <div class="md:col-span-2">
                         <label for="exterior_description" class="block text-sm font-medium text-gray-700 mb-1">Descripción Exterior</label>
@@ -424,7 +424,7 @@
                             class="w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-blue-500 focus:border-blue-500 transition" />
                     </div>
                     <div>
-                        <label for="edit_starting_price" class="block text-sm font-medium text-gray-700 mb-1">Precio Inicial (S/.)</label>
+                        <label for="edit_starting_price" class="block text-sm font-medium text-gray-700 mb-1">Precio Inicial ($)</label>
                         <input type="number" step="0.01" id="edit_starting_price" name="starting_price" x-model="editService.starting_price" min="0"
                             class="w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-blue-500 focus:border-blue-500 transition" />
                     </div>
@@ -473,10 +473,10 @@
             </div>
             <form @submit.prevent="savePrice" class="space-y-5">
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Precio (S/.)</label>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Precio ($)</label>
                     <div class="mt-1 relative rounded-md shadow-sm">
                         <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                            <span class="text-gray-500 sm:text-sm">S/.</span>
+                            <span class="text-gray-500 sm:text-sm">$</span>
                         </div>
                         <input 
                             type="number" step="0.01" min="0" x-model="editPriceValue" required

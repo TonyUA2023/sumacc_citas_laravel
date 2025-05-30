@@ -10,9 +10,11 @@ class AdminUserSeeder extends Seeder
 {
     public function run()
     {
-        AdminUser::updateOrCreate(
-            ['email' => 'admin@tusitio.com'],
-            ['password_hash' => Hash::make('admin1234')]
-        );
+        AdminUser::create([
+            'email' => 'admin@wayraplace.com',
+            'password_hash' => Hash::make('Wayra2024@'),
+        ]);
+
+        echo "✅ Administrador creado exitosamente.\n";
     }
 }

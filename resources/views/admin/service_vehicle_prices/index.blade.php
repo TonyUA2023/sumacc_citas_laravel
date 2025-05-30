@@ -15,7 +15,7 @@
             <th class="py-2 px-4 text-left">ID</th>
             <th class="py-2 px-4 text-left">Servicio</th>
             <th class="py-2 px-4 text-left">Tipo Vehículo</th>
-            <th class="py-2 px-4 text-left">Precio (S/.)</th>
+            <th class="py-2 px-4 text-left">Precio ($)</th>
             <th class="py-2 px-4 text-left">Acciones</th>
         </tr>
     </thead>

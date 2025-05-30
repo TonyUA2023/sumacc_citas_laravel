@@ -7,8 +7,7 @@
     <title>Panel Admin - @yield('title', 'Gestor de Citas')</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <link rel="icon" type="image/svg+xml" href="{{ asset('logo/logoHead1.ico') }}" />
-    <!-- Agregar Heroicons -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/alpinejs/3.13.0/cdn.min.js" defer></script>
+    <!-- Agregar Heroicons -->>
 </head>
 <body class="bg-gray-50 font-sans min-h-screen flex text-gray-800">
 

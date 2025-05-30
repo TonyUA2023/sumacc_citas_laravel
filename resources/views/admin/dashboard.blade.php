@@ -474,7 +474,7 @@ document.addEventListener('DOMContentLoaded', () => {
         data: {
             labels: @json($monthlyRevenueFull->keys()->map(fn($m) => \Carbon\Carbon::createFromFormat('Y-m', $m)->format('M Y'))),
             datasets: [{
-                label: 'Ingresos (S/.)',
+                label: 'Ingresos ($)',
                 data: @json($monthlyRevenueFull->values()),
                 fill: {
                     target: 'origin',
@@ -501,7 +501,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     },
                     ticks: {
                         callback: function(value) {
-                            return 'S/. ' + value;
+                            return '$ ' + value;
                         }
                     }
                 },
@@ -517,7 +517,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     ...tooltipConfig,
                     callbacks: {
                         label: function(context) {
-                            return 'S/. ' + context.parsed.y.toFixed(2);
+                            return '$ ' + context.parsed.y.toFixed(2);
                         }
                     }
                 }

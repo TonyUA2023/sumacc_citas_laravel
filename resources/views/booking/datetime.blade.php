@@ -153,61 +153,99 @@
     const slotsConfig = { morning: [8,9,10,11], afternoon: [12,13,14,15,16,17] };
 
     function renderCalendar(date) {
+      // Fecha de hoy a medianoche
+      const todayMidnight = new Date();
+      todayMidnight.setHours(0,0,0,0);
+
       const year = date.getFullYear(), month = date.getMonth();
       monthEl.textContent = date.toLocaleString('default',{ month:'long', year:'numeric' });
       gridEl.innerHTML = '';
+
+      // Espacios hasta el primer día de la semana
       const firstDay = (new Date(year, month, 1).getDay() + 6) % 7;
-      for(let i=0; i<firstDay; i++) { gridEl.appendChild(document.createElement('div')); }
+      for(let i=0; i<firstDay; i++) {
+        gridEl.appendChild(document.createElement('div'));
+      }
+
+      // Botones de cada día
       for(let d=1, days=new Date(year, month+1, 0).getDate(); d<=days; d++){
         const btn = document.createElement('button');
         btn.textContent = d;
         btn.className = 'py-2 rounded hover:bg-blue-100';
+
+        // Construye la fecha a medianoche local
+        const cellDate = new Date(year, month, d);
+        cellDate.setHours(0,0,0,0);
+
+        // ¿Día completo bloqueado?
         const iso = `${year}-${String(month+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
-        const cell = new Date(iso).setHours(0,0,0,0), today = new Date().setHours(0,0,0,0);
-        const dayBlocked = blocked.filter(b=>b.date===iso).length >= slotsConfig.morning.length + slotsConfig.afternoon.length;
-        if(cell < today || dayBlocked){
-          btn.disabled = true; btn.classList.add('opacity-50','cursor-not-allowed');
+        const dayBlocked = blocked.filter(b=>b.date===iso).length
+                         >= slotsConfig.morning.length + slotsConfig.afternoon.length;
+
+        if (cellDate < todayMidnight || dayBlocked) {
+          btn.disabled = true;
+          btn.classList.add('opacity-50','cursor-not-allowed');
         } else {
-          btn.addEventListener('click', ()=>{
+          btn.addEventListener('click', ()=> {
+            // marca día seleccionado
             gridEl.querySelectorAll('button').forEach(b=>b.classList.remove('bg-blue-200'));
             btn.classList.add('bg-blue-200');
             inputDate.value = iso;
-            summaryDate.textContent = date.toLocaleDateString('en-US',{ weekday:'short', month:'short', day:'numeric' });
-            renderSlots(iso); checkNext();
+            summaryDate.textContent = date.toLocaleDateString('en-US',{
+              weekday:'short', month:'short', day:'numeric'
+            });
+            renderSlots(iso);
+            checkNext();
           });
         }
+
         gridEl.appendChild(btn);
       }
     }
 
     function renderSlots(dateStr) {
       ['morning','afternoon'].forEach(section=>{
-        const cont = document.getElementById(section+'-slots'); cont.innerHTML='';
+        const cont = document.getElementById(section+'-slots');
+        cont.innerHTML = '';
         slotsConfig[section].forEach(hour=>{
-          if(blocked.some(b=>b.date===dateStr && b.hour===`${String(hour).padStart(2,'0')}:00`)) return;
+          // omite horas ya reservadas
+          if (blocked.some(b=>b.date===dateStr && b.hour===`${String(hour).padStart(2,'0')}:00`)) return;
           const btn = document.createElement('button');
           const ampm = hour<12?'AM':'PM', hr12 = hour%12||12;
           btn.textContent = `${hr12}:00 ${ampm}`;
           btn.className = 'px-3 py-2 rounded hover:bg-blue-100';
+
+          // sólo bloquea horas pasadas
           const slotTime = new Date(`${dateStr}T${String(hour).padStart(2,'0')}:00`);
-          if(slotTime < new Date()) return;
+          if (slotTime < new Date()) return;
+
           btn.addEventListener('click', ()=>{
             cont.querySelectorAll('button').forEach(b=>b.classList.remove('bg-blue-200'));
             btn.classList.add('bg-blue-200');
             inputTime.value = `${String(hour).padStart(2,'0')}:00`;
-            summaryTime.textContent = btn.textContent; checkNext();
+            summaryTime.textContent = btn.textContent;
+            checkNext();
           });
           cont.appendChild(btn);
         });
       });
     }
 
-    function checkNext() { nextBtn.disabled = !(inputDate.value && inputTime.value); }
+    function checkNext() {
+      nextBtn.disabled = !(inputDate.value && inputTime.value);
+    }
 
-    document.getElementById('prev-month').onclick = ()=>{ current.setMonth(current.getMonth()-1); renderCalendar(current); };
-    document.getElementById('next-month').onclick = ()=>{ current.setMonth(current.getMonth()+1); renderCalendar(current); };
+    document.getElementById('prev-month').onclick = ()=> {
+      current.setMonth(current.getMonth()-1);
+      renderCalendar(current);
+    };
+    document.getElementById('next-month').onclick = ()=> {
+      current.setMonth(current.getMonth()+1);
+      renderCalendar(current);
+    };
 
     renderCalendar(current);
   });
 </script>
+
 @endsection

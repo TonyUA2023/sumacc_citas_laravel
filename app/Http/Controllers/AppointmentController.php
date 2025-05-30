@@ -54,7 +54,8 @@ public function events()
                 'customer_email'   => $customer->email  ?? '—',
                 'vehicle'          => optional($appointment->serviceVehiclePrice->vehicleType)->name ?? 'N/A',
                 'total_price'      => (float) ($appointment->total_price ?? 0),
-                'status'           => $appointment->status ?? 'pendiente',
+                'status'           => $appointment->status ?? 'Pendiente',
+                'notes'           => $appointment->notes,
                 'extras'           => $appointment->appointmentExtras->map(function($extra) {
                     return [
                         'name'     => optional($extra->aLaCarteService)->name ?? 'Extra',
@@ -122,7 +123,7 @@ public function events()
     public function updateStatus(Request $request, Appointment $appointment)
     {
         $request->validate([
-            'status' => 'required|in:pendiente,aceptado,realizado,rechazado',
+            'status' => 'required|in:Pendiente,Aceptado,Realizado,Rechazado',
         ]);
 
         $appointment->status = $request->status;

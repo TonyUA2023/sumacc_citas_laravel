@@ -20,7 +20,7 @@
                 <th class="py-3 px-4 text-left">Nombre</th>
                 <th class="py-3 px-4 text-left">Descripción</th>
                 <th class="py-3 px-4 text-left">¿Variable?</th>
-                <th class="py-3 px-4 text-left">Precio (S/.)</th>
+                <th class="py-3 px-4 text-left">Precio ($)</th>
                 <th class="py-3 px-4 text-left">Acciones</th>
             </tr>
         </thead>
@@ -82,7 +82,7 @@
                     </div>
 
                     <div>
-                        <label for="price" class="block text-sm font-semibold text-gray-700 mb-1">Precio (S/.)</label>
+                        <label for="price" class="block text-sm font-semibold text-gray-700 mb-1">Precio ($)</label>
                         <input type="number" step="0.01" id="price" name="price" min="0" required
                             class="w-full border border-gray-300 rounded-md px-4 py-3 focus:ring-wavraBlue focus:border-wavraBlue transition" />
                     </div>
@@ -135,7 +135,7 @@
                     </div>
 
                     <div>
-                        <label for="edit_price" class="block text-sm font-semibold text-gray-700 mb-1">Precio (S/.)</label>
+                        <label for="edit_price" class="block text-sm font-semibold text-gray-700 mb-1">Precio ($)</label>
                         <input type="number" step="0.01" id="edit_price" name="price" min="0" x-model="editService.price" required
                             class="w-full border border-gray-300 rounded-md px-4 py-3 focus:ring-wavraBlue focus:border-wavraBlue transition" />
                     </div>
